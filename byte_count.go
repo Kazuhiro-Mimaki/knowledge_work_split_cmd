@@ -8,8 +8,7 @@ import (
 	"strconv"
 )
 
-func readFileByChunk(filename string, chunkCount int) {
-	// Open the file for reading
+func readFileByBytes(filename string, byteCount int) {
 	file, err := os.Open(filename)
 	if err != nil {
 		log.Fatal(err)
@@ -19,18 +18,10 @@ func readFileByChunk(filename string, chunkCount int) {
 	// Create a buffered reader
 	reader := bufio.NewReader(file)
 
-	var fileSize int
-	if statFile, err := file.Stat(); err == nil {
-		size64 := statFile.Size()
-		if int64(int(size64)) == size64 {
-			fileSize = int(size64)
-		}
-	}
-
 	lastIndex := 1
 
 	for {
-		chunk := make([]byte, fileSize/chunkCount)
+		chunk := make([]byte, byteCount)
 		n, err := reader.Read(chunk)
 
 		if err != nil {
@@ -48,13 +39,13 @@ func readFileByChunk(filename string, chunkCount int) {
 		lastIndex++
 
 		// Check for EOF
-		if err == nil && n < chunkCount {
+		if err == nil && n < byteCount {
 			break
 		}
 	}
 }
 
-func writeChunk(chunks []byte, filename string) {
+func writeBytes(chunks []byte, filename string) {
 	file, err := os.Create(filename)
 	if err != nil {
 		log.Fatal(err)
