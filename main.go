@@ -33,6 +33,7 @@ func main() {
 		if err := validatePositive(n); err != nil {
 			panic(err)
 		}
+		readFileByChunk(filename, n)
 	case "b":
 		// split file by byte
 	case "noArgs":
