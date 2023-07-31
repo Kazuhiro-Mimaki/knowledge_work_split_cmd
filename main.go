@@ -43,7 +43,7 @@ func main() {
 	case "noArgs":
 		// no args
 	default:
-		panic("only one option can be used: l or n or b")
+		panic("only one option can be used: 'l' or 'n' or 'b'")
 	}
 
 	fmt.Println("pass")
