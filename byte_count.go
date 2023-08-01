@@ -2,10 +2,8 @@ package main
 
 import (
 	"bufio"
-	"fmt"
 	"log"
 	"os"
-	"strconv"
 )
 
 func readFileByBytes(filename string, byteCount int) {
@@ -15,10 +13,9 @@ func readFileByBytes(filename string, byteCount int) {
 	}
 	defer file.Close()
 
-	// Create a buffered reader
 	reader := bufio.NewReader(file)
 
-	lastIndex := 1
+	filenameGenerator := NewFilenameGenerator()
 
 	for {
 		chunk := make([]byte, byteCount)
@@ -31,12 +28,9 @@ func readFileByBytes(filename string, byteCount int) {
 			log.Fatal(err)
 		}
 
-		// Print the chunk
-		fmt.Printf("%s", chunk[:n])
+		writeChunk(chunk[:n], "./tmp_dir/" + filenameGenerator.CurrentName)
 
-		writeChunk(chunk[:n], "output"+strconv.Itoa(lastIndex)+".txt")
-
-		lastIndex++
+		filenameGenerator.Next()
 
 		// Check for EOF
 		if err == nil && n < byteCount {
