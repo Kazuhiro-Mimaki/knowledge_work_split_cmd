@@ -14,7 +14,7 @@ func NewFilenameGenerator() FilenameGenerator {
 	return FilenameGenerator{CurrentName: DEFAULT_NAME}
 }
 
-func (f *FilenameGenerator) Next() string {
+func (f *FilenameGenerator) Increment() string {
 	i, err := strconv.Atoi(f.CurrentName)
 	if err != nil {
 		log.Fatal(err)

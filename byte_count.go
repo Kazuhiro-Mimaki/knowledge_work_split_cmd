@@ -29,7 +29,7 @@ func readFileByBytes(filename string, byteCount int) {
 
 		writeBytes(chunk[:n], "./tmp_dir/"+filenameGenerator.CurrentName)
 
-		filenameGenerator.Next()
+		filenameGenerator.Increment()
 
 		// Check for EOF
 		if err == nil && n < byteCount {
