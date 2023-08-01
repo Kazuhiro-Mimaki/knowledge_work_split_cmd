@@ -20,7 +20,6 @@ func readFileByBytes(filename string, byteCount int) {
 	for {
 		chunk := make([]byte, byteCount)
 		n, err := reader.Read(chunk)
-
 		if err != nil {
 			if err.Error() == "EOF" {
 				break
@@ -28,7 +27,7 @@ func readFileByBytes(filename string, byteCount int) {
 			log.Fatal(err)
 		}
 
-		writeChunk(chunk[:n], "./tmp_dir/" + filenameGenerator.CurrentName)
+		writeBytes(chunk[:n], "./tmp_dir/"+filenameGenerator.CurrentName)
 
 		filenameGenerator.Next()
 
@@ -46,7 +45,14 @@ func writeBytes(chunks []byte, filename string) {
 	}
 	defer file.Close()
 
-	_, err = file.Write(chunks)
+	writer := bufio.NewWriter(file)
+
+	_, err = writer.Write(chunks)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	err = writer.Flush()
 	if err != nil {
 		log.Fatal(err)
 	}
