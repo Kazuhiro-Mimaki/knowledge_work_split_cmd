@@ -20,32 +20,20 @@ func ExecuteByChunk(filename string, chunkCount int) {
 	if err != nil {
 		log.Fatal(err)
 	}
+	byteCount, rest := fileSize/chunkCount, fileSize%chunkCount
 
 	filenameGenerator := NewFilenameGenerator()
-
-	byteCount, rest := fileSize/chunkCount, fileSize%chunkCount
 
 	for i := 1; i < chunkCount; i++ {
 		chunks, _, err := readChunksByChunkCount(reader, byteCount)
 		if err != nil {
-			if err.Error() == "EOF" {
-				break
-			}
 			log.Fatal(err)
 		}
 
-		writeFile, err := os.Create("./tmp_dir/" + filenameGenerator.CurrentName)
+		err = createFileAndWrite("./tmp_dir/"+filenameGenerator.CurrentName, chunks)
 		if err != nil {
 			log.Fatal(err)
 		}
-
-		writer := bufio.NewWriter(writeFile)
-		err = writeChunksByChunkCount(writer, chunks)
-		if err != nil {
-			log.Fatal(err)
-		}
-
-		writeFile.Close()
 
 		filenameGenerator.Increment()
 	}
@@ -55,18 +43,10 @@ func ExecuteByChunk(filename string, chunkCount int) {
 		log.Fatal(err)
 	}
 
-	writeFile, err := os.Create("./tmp_dir/" + filenameGenerator.CurrentName)
+	err = createFileAndWrite("./tmp_dir/"+filenameGenerator.CurrentName, chunks)
 	if err != nil {
 		log.Fatal(err)
 	}
-
-	writer := bufio.NewWriter(writeFile)
-	err = writeChunksByChunkCount(writer, chunks)
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	writeFile.Close()
 }
 
 func getFileSize(file *os.File) (int, error) {
@@ -94,4 +74,18 @@ func writeChunksByChunkCount(writer *bufio.Writer, chunks []byte) error {
 	_, err := writer.Write(chunks)
 	err = writer.Flush()
 	return err
+}
+
+func createFileAndWrite(filename string, bytes []byte) error {
+	writeFile, err := os.Create(filename)
+	if err != nil {
+		return err
+	}
+	writer := bufio.NewWriter(writeFile)
+	err = writeChunksByChunkCount(writer, bytes)
+	if err != nil {
+		return err
+	}
+	writeFile.Close()
+	return nil
 }
