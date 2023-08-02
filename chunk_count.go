@@ -14,14 +14,16 @@ func ExecuteByChunk(filename string, chunkCount int) {
 	}
 	defer readFile.Close()
 
-	reader := bufio.NewReader(readFile)
-
 	fileSize, err := getFileSize(readFile)
 	if err != nil {
 		log.Fatal(err)
 	}
+	if fileSize < chunkCount {
+		log.Fatalf("can't split into more than %d files", fileSize)
+	}
 	byteCount, rest := fileSize/chunkCount, fileSize%chunkCount
 
+	reader := bufio.NewReader(readFile)
 	filenameGenerator := NewFilenameGenerator()
 
 	for i := 1; i < chunkCount; i++ {
