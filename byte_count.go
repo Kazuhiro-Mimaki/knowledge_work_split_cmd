@@ -6,20 +6,19 @@ import (
 	"os"
 )
 
-func readFileByBytes(filename string, byteCount int) {
-	file, err := os.Open(filename)
+func ExecuteByteCount(filename string, byteCount int) {
+	readFile, err := os.Open(filename)
 	if err != nil {
 		log.Fatal(err)
 	}
-	defer file.Close()
+	defer readFile.Close()
 
-	reader := bufio.NewReader(file)
+	reader := bufio.NewReader(readFile)
 
 	filenameGenerator := NewFilenameGenerator()
 
 	for {
-		chunk := make([]byte, byteCount)
-		n, err := reader.Read(chunk)
+		chunks, cursor, err := readChunksByByteCount(reader, byteCount)
 		if err != nil {
 			if err.Error() == "EOF" {
 				break
@@ -27,33 +26,36 @@ func readFileByBytes(filename string, byteCount int) {
 			log.Fatal(err)
 		}
 
-		writeBytes(chunk[:n], "./tmp_dir/"+filenameGenerator.CurrentName)
+		writeFile, err := os.Create("./tmp_dir/" + filenameGenerator.CurrentName)
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		writer := bufio.NewWriter(writeFile)
+		err = writeChunks(writer, chunks)
+		if err != nil {
+			log.Fatal(err)
+		}
 
 		filenameGenerator.Increment()
 
+		writeFile.Close()
+
 		// Check for EOF
-		if err == nil && n < byteCount {
+		if err == nil && cursor < byteCount {
 			break
 		}
 	}
 }
 
-func writeBytes(chunks []byte, filename string) {
-	file, err := os.Create(filename)
-	if err != nil {
-		log.Fatal(err)
-	}
-	defer file.Close()
+func readChunksByByteCount(reader *bufio.Reader, byteCount int) ([]byte, int, error) {
+	chunks := make([]byte, byteCount)
+	cursor, err := reader.Read(chunks)
+	return chunks[:cursor], cursor, err
+}
 
-	writer := bufio.NewWriter(file)
-
-	_, err = writer.Write(chunks)
-	if err != nil {
-		log.Fatal(err)
-	}
-
+func writeChunks(writer *bufio.Writer, chunks []byte) error {
+	_, err := writer.Write(chunks)
 	err = writer.Flush()
-	if err != nil {
-		log.Fatal(err)
-	}
+	return err
 }

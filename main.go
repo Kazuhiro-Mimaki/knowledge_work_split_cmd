@@ -39,7 +39,7 @@ func main() {
 		if err := validatePositive(n); err != nil {
 			panic(err)
 		}
-		readFileByBytes(filename, b)
+		ExecuteByteCount(filename, b)
 	case "noArgs":
 		// no args
 	default:
