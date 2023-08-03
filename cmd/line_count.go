@@ -2,18 +2,18 @@ package cmd
 
 import (
 	"bufio"
-	"log"
+	"fmt"
 	"os"
 
 	"split_cmd/utils"
 )
 
-func ExecuteByLine(filename string, lineCount int) {
+func ExecuteByLine(filename string, lineCount int) error {
 	buffer := NewScannerBuffer()
 
 	file, err := os.Open(filename)
 	if err != nil {
-		log.Fatalf("Error when opening file: %s", err)
+		return fmt.Errorf("ExecuteByLine: error when opening file: %s", err)
 	}
 	defer file.Close()
 
@@ -30,7 +30,7 @@ func ExecuteByLine(filename string, lineCount int) {
 		if buffer.lineCount == lineCount {
 			err := utils.CreateFileAndWrite("./tmp_dir/"+filenameGenerator.CurrentName, buffer.bytes)
 			if err != nil {
-				log.Fatal(err)
+				return fmt.Errorf("ExecuteByLine: error when create and write file in loop: %s", err)
 			}
 			buffer.Reset()
 			filenameGenerator.Increment()
@@ -40,11 +40,13 @@ func ExecuteByLine(filename string, lineCount int) {
 	if buffer.lineCount > 0 {
 		err := utils.CreateFileAndWrite("./tmp_dir/"+filenameGenerator.CurrentName, buffer.bytes)
 		if err != nil {
-			log.Fatal(err)
+			return fmt.Errorf("ExecuteByLine: error when create and write file: %s", err)
 		}
 	}
 
 	if err := scanner.Err(); err != nil {
-		log.Fatalf("Error while scan file: %s", err)
+		return fmt.Errorf("ExecuteByLine: error when scan file: %s", err)
 	}
+
+	return nil
 }

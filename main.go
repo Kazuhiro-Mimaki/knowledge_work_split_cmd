@@ -1,7 +1,9 @@
 package main
 
 import (
+	"errors"
 	"flag"
+	"log"
 
 	"split_cmd/cmd"
 	"split_cmd/utils"
@@ -22,29 +24,38 @@ func main() {
 
 	filename := flag.Args()[0]
 
+	var allError error
+
 	switch utils.Mode(l, n, b) {
 	case "l":
 		// split file by line
 		if err := utils.ValidatePositive(l); err != nil {
-			panic(err)
+			allError = err
 		}
-		cmd.ExecuteByLine(filename, l)
+		allError = cmd.ExecuteByLine(filename, l)
 	case "n":
 		// split file by chunk
 		if err := utils.ValidatePositive(n); err != nil {
-			panic(err)
+			allError = err
 		}
-		cmd.ExecuteByChunk(filename, n)
+		allError = cmd.ExecuteByChunk(filename, n)
 	case "b":
 		// split file by byte
 		if err := utils.ValidatePositive(n); err != nil {
-			panic(err)
+			allError = err
 		}
-		cmd.ExecuteByteCount(filename, b)
+		allError = cmd.ExecuteByteCount(filename, b)
 	case "noArgs":
 		// 引数がない場合は1つのファイルに書き込む
-		cmd.ExecuteByChunk(filename, 1)
+		allError = cmd.ExecuteByChunk(filename, 1)
 	default:
-		panic("only one option can be used: 'l' or 'n' or 'b'")
+		allError = errors.New("only one option can be used: 'l' or 'n' or 'b'")
 	}
+
+	if allError != nil {
+		log.Fatal(allError)
+	}
+
+	log.Print("success")
+	return
 }

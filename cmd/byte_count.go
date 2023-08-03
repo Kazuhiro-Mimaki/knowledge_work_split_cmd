@@ -2,16 +2,16 @@ package cmd
 
 import (
 	"bufio"
-	"log"
+	"fmt"
 	"os"
 
 	"split_cmd/utils"
 )
 
-func ExecuteByteCount(filename string, byteCount int) {
+func ExecuteByteCount(filename string, byteCount int) error {
 	readFile, err := os.Open(filename)
 	if err != nil {
-		log.Fatal(err)
+		return fmt.Errorf("ExecuteByteCount: error when opening file: %s", err)
 	}
 	defer readFile.Close()
 
@@ -25,23 +25,21 @@ func ExecuteByteCount(filename string, byteCount int) {
 			if err.Error() == "EOF" {
 				break
 			}
-			log.Fatal(err)
+			return fmt.Errorf("ExecuteByteCount: error when read chunks by byte count in loop: %s", err)
 		}
 
 		err = utils.CreateFileAndWrite("./tmp_dir/"+filenameGenerator.CurrentName, chunks)
-
-		writeFile, err := os.Create("./tmp_dir/" + filenameGenerator.CurrentName)
 		if err != nil {
-			log.Fatal(err)
+			return fmt.Errorf("ExecuteByteCount: error when create and write file by byte count: %s", err)
 		}
 
 		filenameGenerator.Increment()
-
-		writeFile.Close()
 
 		// Check for EOF
 		if err == nil && cursor < byteCount {
 			break
 		}
 	}
+
+	return nil
 }

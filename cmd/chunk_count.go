@@ -2,25 +2,25 @@ package cmd
 
 import (
 	"bufio"
-	"log"
+	"fmt"
 	"os"
 
 	"split_cmd/utils"
 )
 
-func ExecuteByChunk(filename string, chunkCount int) {
+func ExecuteByChunk(filename string, chunkCount int) error {
 	readFile, err := os.Open(filename)
 	if err != nil {
-		log.Fatal(err)
+		return fmt.Errorf("ExecuteByChunk: error when opening file: %s", err)
 	}
 	defer readFile.Close()
 
 	fileSize, err := utils.GetFileSize(readFile)
 	if err != nil {
-		log.Fatal(err)
+		return fmt.Errorf("ExecuteByChunk: error when get file size %d files", err)
 	}
 	if fileSize < chunkCount {
-		log.Fatalf("can't split into more than %d files", fileSize)
+		return fmt.Errorf("ExecuteByChunk: can't split into more than %d files", fileSize)
 	}
 	byteCount, rest := fileSize/chunkCount, fileSize%chunkCount
 
@@ -30,12 +30,12 @@ func ExecuteByChunk(filename string, chunkCount int) {
 	for i := 1; i < chunkCount; i++ {
 		chunks, _, err := utils.ReadChunksByByteCount(reader, byteCount)
 		if err != nil {
-			log.Fatal(err)
+			return fmt.Errorf("ExecuteByChunk: error when read chunks by byte count in loop : %s", err)
 		}
 
 		err = utils.CreateFileAndWrite("./tmp_dir/"+filenameGenerator.CurrentName, chunks)
 		if err != nil {
-			log.Fatal(err)
+			return fmt.Errorf("ExecuteByChunk: error when create and write file in loop : %s", err)
 		}
 
 		filenameGenerator.Increment()
@@ -43,11 +43,13 @@ func ExecuteByChunk(filename string, chunkCount int) {
 
 	chunks, _, err := utils.ReadChunksByByteCount(reader, byteCount+rest)
 	if err != nil {
-		log.Fatal(err)
+		return fmt.Errorf("ExecuteByChunk: error when read chunks by byte count : %s", err)
 	}
 
 	err = utils.CreateFileAndWrite("./tmp_dir/"+filenameGenerator.CurrentName, chunks)
 	if err != nil {
-		log.Fatal(err)
+		return fmt.Errorf("ExecuteByChunk: error when create and write file : %s", err)
 	}
+
+	return nil
 }
