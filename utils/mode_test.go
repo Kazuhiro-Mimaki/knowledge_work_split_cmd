@@ -9,7 +9,7 @@ func TestMode(t *testing.T) {
 		got := Mode(1, 0, 0)
 		want := "l"
 		if got != want {
-			t.Errorf("NewFilenameGenerator() == %v, want %s", got, want)
+			t.Errorf("Mode(1, 0, 0) == %v, want %s", got, want)
 		}
 	})
 
@@ -17,7 +17,7 @@ func TestMode(t *testing.T) {
 		got := Mode(0, 1, 0)
 		want := "n"
 		if got != want {
-			t.Errorf("NewFilenameGenerator() == %v, want %s", got, want)
+			t.Errorf("Mode(0, 1, 0) == %v, want %s", got, want)
 		}
 	})
 
@@ -25,7 +25,7 @@ func TestMode(t *testing.T) {
 		got := Mode(0, 0, 1)
 		want := "b"
 		if got != want {
-			t.Errorf("NewFilenameGenerator() == %v, want %s", got, want)
+			t.Errorf("Mode(0, 0, 1) == %v, want %s", got, want)
 		}
 	})
 
@@ -33,7 +33,7 @@ func TestMode(t *testing.T) {
 		got := Mode(0, 0, 0)
 		want := "noArgs"
 		if got != want {
-			t.Errorf("NewFilenameGenerator() == %v, want %s", got, want)
+			t.Errorf("Mode(0, 0, 0) == %v, want %s", got, want)
 		}
 	})
 
@@ -41,7 +41,7 @@ func TestMode(t *testing.T) {
 		got := Mode(0, 1, 1)
 		want := ""
 		if got != want {
-			t.Errorf("NewFilenameGenerator() == %v, want %s", got, want)
+			t.Errorf("Mode(0, 1, 1) == %v, want %s", got, want)
 		}
 	})
 
@@ -49,7 +49,7 @@ func TestMode(t *testing.T) {
 		got := Mode(1, 1, 1)
 		want := ""
 		if got != want {
-			t.Errorf("NewFilenameGenerator() == %v, want %s", got, want)
+			t.Errorf("Mode(1, 1, 1) == %v, want %s", got, want)
 		}
 	})
 }
