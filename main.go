@@ -1,11 +1,10 @@
 package main
 
 import (
-	"errors"
 	"flag"
-	"fmt"
 
 	"split_cmd/cmd"
+	"split_cmd/utils"
 )
 
 func main() {
@@ -23,22 +22,22 @@ func main() {
 
 	filename := flag.Args()[0]
 
-	switch mode(l, n, b) {
+	switch utils.Mode(l, n, b) {
 	case "l":
 		// split file by line
-		if err := validatePositive(l); err != nil {
+		if err := utils.ValidatePositive(l); err != nil {
 			panic(err)
 		}
 		cmd.ExecuteByLine(filename, l)
 	case "n":
 		// split file by chunk
-		if err := validatePositive(n); err != nil {
+		if err := utils.ValidatePositive(n); err != nil {
 			panic(err)
 		}
 		cmd.ExecuteByChunk(filename, n)
 	case "b":
 		// split file by byte
-		if err := validatePositive(n); err != nil {
+		if err := utils.ValidatePositive(n); err != nil {
 			panic(err)
 		}
 		cmd.ExecuteByteCount(filename, b)
@@ -48,27 +47,4 @@ func main() {
 	default:
 		panic("only one option can be used: 'l' or 'n' or 'b'")
 	}
-
-	fmt.Println("pass")
-}
-
-func mode(l, n, b int) string {
-	if l != 0 && n == 0 && b == 0 {
-		return "l"
-	} else if l == 0 && n != 0 && b == 0 {
-		return "n"
-	} else if l == 0 && n == 0 && b != 0 {
-		return "b"
-	} else if l == 0 && n == 0 && b == 0 {
-		return "noArgs"
-	} else {
-		return ""
-	}
-}
-
-func validatePositive(number int) (err error) {
-	if number < 0 {
-		return errors.New("number must be positive")
-	}
-	return nil
 }
