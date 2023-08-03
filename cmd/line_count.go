@@ -1,4 +1,4 @@
-package main
+package cmd
 
 import (
 	"bufio"
@@ -8,30 +8,8 @@ import (
 	"split_cmd/utils"
 )
 
-type Buffer struct {
-	lineCount int
-	bytes     []byte
-}
-
-func newBuffer() *Buffer {
-	return &Buffer{0, []byte{}}
-}
-
-func (b *Buffer) reset() {
-	b.lineCount = 0
-	b.bytes = []byte{}
-}
-
-func (b *Buffer) appendBytes(bytes []byte) {
-	b.bytes = append(b.bytes, bytes...)
-}
-
-func (b *Buffer) incrementLineCount() {
-	b.lineCount += 1
-}
-
 func ExecuteByLine(filename string, lineCount int) {
-	buffer := newBuffer()
+	buffer := NewScannerBuffer()
 
 	file, err := os.Open(filename)
 	if err != nil {
@@ -40,13 +18,13 @@ func ExecuteByLine(filename string, lineCount int) {
 	defer file.Close()
 
 	scanner := bufio.NewScanner(file)
-	filenameGenerator := NewFilenameGenerator()
+	filenameGenerator := utils.NewFilenameGenerator()
 
 	for scanner.Scan() {
 		withLF := append(scanner.Bytes(), []byte("\n")...)
 
-		buffer.appendBytes(withLF)
-		buffer.incrementLineCount()
+		buffer.AppendBytes(withLF)
+		buffer.IncrementLineCount()
 
 		// 指定した行数に達したらファイルを作成して書き込み → バッファをリセットして再度行数をカウント
 		if buffer.lineCount == lineCount {
@@ -54,7 +32,7 @@ func ExecuteByLine(filename string, lineCount int) {
 			if err != nil {
 				log.Fatal(err)
 			}
-			buffer.reset()
+			buffer.Reset()
 			filenameGenerator.Increment()
 		}
 	}

@@ -4,6 +4,8 @@ import (
 	"errors"
 	"flag"
 	"fmt"
+
+	"split_cmd/cmd"
 )
 
 func main() {
@@ -27,19 +29,19 @@ func main() {
 		if err := validatePositive(l); err != nil {
 			panic(err)
 		}
-		ExecuteByLine(filename, l)
+		cmd.ExecuteByLine(filename, l)
 	case "n":
 		// split file by chunk
 		if err := validatePositive(n); err != nil {
 			panic(err)
 		}
-		ExecuteByChunk(filename, n)
+		cmd.ExecuteByChunk(filename, n)
 	case "b":
 		// split file by byte
 		if err := validatePositive(n); err != nil {
 			panic(err)
 		}
-		ExecuteByteCount(filename, b)
+		cmd.ExecuteByteCount(filename, b)
 	case "noArgs":
 		// no args
 	default:

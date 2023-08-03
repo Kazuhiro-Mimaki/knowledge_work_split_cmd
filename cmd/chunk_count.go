@@ -1,4 +1,4 @@
-package main
+package cmd
 
 import (
 	"bufio"
@@ -25,7 +25,7 @@ func ExecuteByChunk(filename string, chunkCount int) {
 	byteCount, rest := fileSize/chunkCount, fileSize%chunkCount
 
 	reader := bufio.NewReader(readFile)
-	filenameGenerator := NewFilenameGenerator()
+	filenameGenerator := utils.NewFilenameGenerator()
 
 	for i := 1; i < chunkCount; i++ {
 		chunks, _, err := utils.ReadChunksByByteCount(reader, byteCount)
