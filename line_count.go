@@ -4,17 +4,32 @@ import (
 	"bufio"
 	"log"
 	"os"
-	"strconv"
 )
 
 type Buffer struct {
-	count int
-	text  string
+	lineCount int
+	bytes     []byte
 }
 
-func readFileByLine(filename string, lineCount int) {
-	lastIndex := 1
-	buffer := Buffer{0, ""}
+func newBuffer() *Buffer {
+	return &Buffer{0, []byte{}}
+}
+
+func (b *Buffer) reset() {
+	b.lineCount = 0
+	b.bytes = []byte{}
+}
+
+func (b *Buffer) appendBytes(bytes []byte) {
+	b.bytes = append(b.bytes, bytes...)
+}
+
+func (b *Buffer) incrementLineCount() {
+	b.lineCount += 1
+}
+
+func ExecuteByLine(filename string, lineCount int) {
+	buffer := newBuffer()
 
 	file, err := os.Open(filename)
 	if err != nil {
@@ -22,40 +37,54 @@ func readFileByLine(filename string, lineCount int) {
 	}
 	defer file.Close()
 
-	fileScanner := bufio.NewScanner(file)
+	scanner := bufio.NewScanner(file)
+	filenameGenerator := NewFilenameGenerator()
 
-	// read line by line
-	for fileScanner.Scan() {
-		buffer.text += fileScanner.Text() + "\n"
-		buffer.count += 1
+	for scanner.Scan() {
+		withLF := append(scanner.Bytes(), []byte("\n")...)
 
-		if buffer.count == lineCount {
-			writeFunc(buffer.text, "output"+strconv.Itoa(lastIndex)+".txt")
-			buffer.text = ""
-			buffer.count = 0
-			lastIndex += 1
+		buffer.appendBytes(withLF)
+		buffer.incrementLineCount()
+
+		// 指定した行数に達したらファイルを作成して書き込み → バッファをリセットして再度行数をカウント
+		if buffer.lineCount == lineCount {
+			err := createAndWrite("./tmp_dir/"+filenameGenerator.CurrentName, buffer.bytes)
+			if err != nil {
+				log.Fatal(err)
+			}
+			buffer.reset()
+			filenameGenerator.Increment()
 		}
 	}
 
-	if buffer.count > 0 {
-		writeFunc(buffer.text, "output"+strconv.Itoa(lastIndex)+".txt")
+	if buffer.lineCount > 0 {
+		err := createAndWrite("./tmp_dir/"+filenameGenerator.CurrentName, buffer.bytes)
+		if err != nil {
+			log.Fatal(err)
+		}
 	}
 
-	// handle first encountered error while reading
-	if err := fileScanner.Err(); err != nil {
-		log.Fatalf("Error while reading file: %s", err)
+	if err := scanner.Err(); err != nil {
+		log.Fatalf("Error while scan file: %s", err)
 	}
 }
 
-func writeFunc(text, filename string) {
-	file, err := os.Create(filename)
-	if err != nil {
-		log.Fatal(err)
-	}
-	defer file.Close()
+func writeChunksByLineCount(writer *bufio.Writer, chunks []byte) error {
+	_, err := writer.Write(chunks)
+	err = writer.Flush()
+	return err
+}
 
-	_, err = file.WriteString(text)
+func createAndWrite(filename string, bytes []byte) error {
+	writeFile, err := os.Create(filename)
 	if err != nil {
-		log.Fatal(err)
+		return err
 	}
+	writer := bufio.NewWriter(writeFile)
+	err = writeChunksByLineCount(writer, bytes)
+	if err != nil {
+		return err
+	}
+	writeFile.Close()
+	return nil
 }

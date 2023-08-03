@@ -27,7 +27,7 @@ func main() {
 		if err := validatePositive(l); err != nil {
 			panic(err)
 		}
-		readFileByLine(filename, l)
+		ExecuteByLine(filename, l)
 	case "n":
 		// split file by chunk
 		if err := validatePositive(n); err != nil {
