@@ -43,7 +43,8 @@ func main() {
 		}
 		cmd.ExecuteByteCount(filename, b)
 	case "noArgs":
-		// no args
+		// 引数がない場合は1つのファイルに書き込む
+		cmd.ExecuteByChunk(filename, 1)
 	default:
 		panic("only one option can be used: 'l' or 'n' or 'b'")
 	}
