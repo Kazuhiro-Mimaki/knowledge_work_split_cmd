@@ -22,38 +22,55 @@ func main() {
 
 	flag.Parse()
 
-	filename := flag.Args()[0]
+	if err := utils.ValidateCmdArgs(flag.Args()); err != nil {
+		log.Fatal(err)
+	}
 
-	var allError error
+	var (
+		filename string
+		suffix   string
+	)
+
+	if len(flag.Args()) == 1 {
+		filename = flag.Arg(0)
+	} else if len(flag.Args()) == 2 {
+		filename, suffix = flag.Arg(0), flag.Arg(1)
+	}
 
 	switch utils.Mode(l, n, b) {
 	case "l":
 		// split file by line
 		if err := utils.ValidatePositive(l); err != nil {
-			allError = err
+			log.Fatal(err)
 		}
-		allError = cmd.ExecuteByLine(filename, l)
+		if err := cmd.ExecuteByLine(filename, suffix, l); err != nil {
+			log.Fatal(err)
+		}
 	case "n":
 		// split file by chunk
 		if err := utils.ValidatePositive(n); err != nil {
-			allError = err
+			log.Fatal(err)
 		}
-		allError = cmd.ExecuteByChunk(filename, n)
+		if err := cmd.ExecuteByChunk(filename, suffix, n); err != nil {
+			log.Fatal(err)
+		}
 	case "b":
 		// split file by byte
 		if err := utils.ValidatePositive(n); err != nil {
-			allError = err
+			log.Fatal(err)
 		}
-		allError = cmd.ExecuteByteCount(filename, b)
+		if err := cmd.ExecuteByteCount(filename, suffix, b); err != nil {
+			log.Fatal(err)
+		}
 	case "noArgs":
 		// 引数がない場合は1つのファイルに書き込む
-		allError = cmd.ExecuteByChunk(filename, 1)
+		if err := cmd.ExecuteByChunk(filename, suffix, 1); err != nil {
+			log.Fatal(err)
+		}
 	default:
-		allError = errors.New("only one option can be used: 'l' or 'n' or 'b'")
-	}
-
-	if allError != nil {
-		log.Fatal(allError)
+		if err := errors.New("only one option can be used: 'l' or 'n' or 'b'"); err != nil {
+			log.Fatal(err)
+		}
 	}
 
 	log.Print("success")

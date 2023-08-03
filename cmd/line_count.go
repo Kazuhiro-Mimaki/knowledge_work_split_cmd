@@ -8,7 +8,7 @@ import (
 	"split_cmd/utils"
 )
 
-func ExecuteByLine(filename string, lineCount int) error {
+func ExecuteByLine(filename, suffix string, lineCount int) error {
 	buffer := NewScannerBuffer()
 
 	file, err := os.Open(filename)
@@ -28,7 +28,7 @@ func ExecuteByLine(filename string, lineCount int) error {
 
 		// 指定した行数に達したらファイルを作成して書き込み → バッファをリセットして再度行数をカウント
 		if buffer.lineCount == lineCount {
-			err := utils.CreateFileAndWrite("./tmp_dir/"+filenameGenerator.CurrentName, buffer.bytes)
+			err := utils.CreateFileAndWrite("./tmp_dir/"+suffix+filenameGenerator.CurrentName, buffer.bytes)
 			if err != nil {
 				return fmt.Errorf("ExecuteByLine: error when create and write file in loop: %s", err)
 			}

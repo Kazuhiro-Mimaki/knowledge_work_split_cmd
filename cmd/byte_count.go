@@ -8,7 +8,7 @@ import (
 	"split_cmd/utils"
 )
 
-func ExecuteByteCount(filename string, byteCount int) error {
+func ExecuteByteCount(filename, suffix string, byteCount int) error {
 	readFile, err := os.Open(filename)
 	if err != nil {
 		return fmt.Errorf("ExecuteByteCount: error when opening file: %s", err)
@@ -28,7 +28,7 @@ func ExecuteByteCount(filename string, byteCount int) error {
 			return fmt.Errorf("ExecuteByteCount: error when read chunks by byte count in loop: %s", err)
 		}
 
-		err = utils.CreateFileAndWrite("./tmp_dir/"+filenameGenerator.CurrentName, chunks)
+		err = utils.CreateFileAndWrite("./tmp_dir/"+suffix+filenameGenerator.CurrentName, chunks)
 		if err != nil {
 			return fmt.Errorf("ExecuteByteCount: error when create and write file by byte count: %s", err)
 		}

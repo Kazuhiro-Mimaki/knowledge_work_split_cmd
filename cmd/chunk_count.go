@@ -8,7 +8,7 @@ import (
 	"split_cmd/utils"
 )
 
-func ExecuteByChunk(filename string, chunkCount int) error {
+func ExecuteByChunk(filename, suffix string, chunkCount int) error {
 	readFile, err := os.Open(filename)
 	if err != nil {
 		return fmt.Errorf("ExecuteByChunk: error when opening file: %s", err)
@@ -33,7 +33,7 @@ func ExecuteByChunk(filename string, chunkCount int) error {
 			return fmt.Errorf("ExecuteByChunk: error when read chunks by byte count in loop : %s", err)
 		}
 
-		err = utils.CreateFileAndWrite("./tmp_dir/"+filenameGenerator.CurrentName, chunks)
+		err = utils.CreateFileAndWrite("./tmp_dir/"+suffix+filenameGenerator.CurrentName, chunks)
 		if err != nil {
 			return fmt.Errorf("ExecuteByChunk: error when create and write file in loop : %s", err)
 		}
