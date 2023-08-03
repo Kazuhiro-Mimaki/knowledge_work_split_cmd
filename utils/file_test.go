@@ -1,4 +1,4 @@
-package main
+package utils
 
 import (
 	"bufio"
@@ -12,7 +12,7 @@ func TestReadChunksByByteCount(t *testing.T) {
 		mockBuff := bytes.NewBuffer([]byte{'A', 'B', 'C'})
 		reader := bufio.NewReader(mockBuff)
 
-		chunks, cursor, _ := readChunksByByteCount(reader, 2)
+		chunks, cursor, _ := ReadChunksByByteCount(reader, 2)
 
 		wantChunks := []byte{'A', 'B'}
 		wantCursor := 2
@@ -28,7 +28,7 @@ func TestReadChunksByByteCount(t *testing.T) {
 		mockBuff := bytes.NewBuffer([]byte{'A', 'B', 'C'})
 		reader := bufio.NewReader(mockBuff)
 
-		chunks, cursor, _ := readChunksByByteCount(reader, 5)
+		chunks, cursor, _ := ReadChunksByByteCount(reader, 5)
 
 		wantChunks := []byte{'A', 'B', 'C'}
 		wantCursor := 3
@@ -47,7 +47,7 @@ func TestReadChunksByByteCount(t *testing.T) {
 		bytes := [][]byte{}
 
 		for {
-			chunks, cursor, _ := readChunksByByteCount(reader, 1)
+			chunks, cursor, _ := ReadChunksByByteCount(reader, 1)
 			if cursor < 1 {
 				break
 			}

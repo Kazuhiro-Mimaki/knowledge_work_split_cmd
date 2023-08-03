@@ -4,6 +4,8 @@ import (
 	"bufio"
 	"log"
 	"os"
+
+	"split_cmd/utils"
 )
 
 func ExecuteByteCount(filename string, byteCount int) {
@@ -18,7 +20,7 @@ func ExecuteByteCount(filename string, byteCount int) {
 	filenameGenerator := NewFilenameGenerator()
 
 	for {
-		chunks, cursor, err := readChunksByByteCount(reader, byteCount)
+		chunks, cursor, err := utils.ReadChunksByByteCount(reader, byteCount)
 		if err != nil {
 			if err.Error() == "EOF" {
 				break
@@ -26,13 +28,9 @@ func ExecuteByteCount(filename string, byteCount int) {
 			log.Fatal(err)
 		}
 
-		writeFile, err := os.Create("./tmp_dir/" + filenameGenerator.CurrentName)
-		if err != nil {
-			log.Fatal(err)
-		}
+		err = utils.CreateFileAndWrite("./tmp_dir/"+filenameGenerator.CurrentName, chunks)
 
-		writer := bufio.NewWriter(writeFile)
-		err = writeChunks(writer, chunks)
+		writeFile, err := os.Create("./tmp_dir/" + filenameGenerator.CurrentName)
 		if err != nil {
 			log.Fatal(err)
 		}
@@ -46,16 +44,4 @@ func ExecuteByteCount(filename string, byteCount int) {
 			break
 		}
 	}
-}
-
-func readChunksByByteCount(reader *bufio.Reader, byteCount int) ([]byte, int, error) {
-	chunks := make([]byte, byteCount)
-	cursor, err := reader.Read(chunks)
-	return chunks[:cursor], cursor, err
-}
-
-func writeChunks(writer *bufio.Writer, chunks []byte) error {
-	_, err := writer.Write(chunks)
-	err = writer.Flush()
-	return err
 }

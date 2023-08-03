@@ -4,6 +4,8 @@ import (
 	"bufio"
 	"log"
 	"os"
+
+	"split_cmd/utils"
 )
 
 type Buffer struct {
@@ -48,7 +50,7 @@ func ExecuteByLine(filename string, lineCount int) {
 
 		// 指定した行数に達したらファイルを作成して書き込み → バッファをリセットして再度行数をカウント
 		if buffer.lineCount == lineCount {
-			err := createAndWrite("./tmp_dir/"+filenameGenerator.CurrentName, buffer.bytes)
+			err := utils.CreateFileAndWrite("./tmp_dir/"+filenameGenerator.CurrentName, buffer.bytes)
 			if err != nil {
 				log.Fatal(err)
 			}
@@ -58,7 +60,7 @@ func ExecuteByLine(filename string, lineCount int) {
 	}
 
 	if buffer.lineCount > 0 {
-		err := createAndWrite("./tmp_dir/"+filenameGenerator.CurrentName, buffer.bytes)
+		err := utils.CreateFileAndWrite("./tmp_dir/"+filenameGenerator.CurrentName, buffer.bytes)
 		if err != nil {
 			log.Fatal(err)
 		}
@@ -67,24 +69,4 @@ func ExecuteByLine(filename string, lineCount int) {
 	if err := scanner.Err(); err != nil {
 		log.Fatalf("Error while scan file: %s", err)
 	}
-}
-
-func writeChunksByLineCount(writer *bufio.Writer, chunks []byte) error {
-	_, err := writer.Write(chunks)
-	err = writer.Flush()
-	return err
-}
-
-func createAndWrite(filename string, bytes []byte) error {
-	writeFile, err := os.Create(filename)
-	if err != nil {
-		return err
-	}
-	writer := bufio.NewWriter(writeFile)
-	err = writeChunksByLineCount(writer, bytes)
-	if err != nil {
-		return err
-	}
-	writeFile.Close()
-	return nil
 }
