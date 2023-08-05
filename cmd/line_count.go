@@ -37,7 +37,7 @@ func ExecuteByLine(filename, suffix string, suffixLength, lineCount int) error {
 	}
 
 	if buffer.lineCount > 0 {
-		err := utils.CreateFileAndWrite("./tmp_dir/"+string(filenameManager.CurrentRunes), buffer.bytes)
+		err := utils.CreateFileAndWrite("./tmp_dir/"+suffix+string(filenameManager.CurrentRunes), buffer.bytes)
 		if err != nil {
 			return fmt.Errorf("ExecuteByLine: error when create and write file: %s", err)
 		}

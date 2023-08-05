@@ -46,7 +46,7 @@ func ExecuteByChunk(filename, suffix string, suffixLength, chunkCount int) error
 		return fmt.Errorf("ExecuteByChunk: error when read chunks by byte count : %s", err)
 	}
 
-	err = utils.CreateFileAndWrite("./tmp_dir/"+string(filenameManager.CurrentRunes), chunks)
+	err = utils.CreateFileAndWrite("./tmp_dir/"+suffix+string(filenameManager.CurrentRunes), chunks)
 	if err != nil {
 		return fmt.Errorf("ExecuteByChunk: error when create and write file : %s", err)
 	}
