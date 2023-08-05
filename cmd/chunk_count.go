@@ -8,7 +8,7 @@ import (
 	"split_cmd/utils"
 )
 
-func ExecuteByChunk(filename, suffix string, chunkCount int) error {
+func ExecuteByChunk(filename, suffix string, suffixLength, chunkCount int) error {
 	readFile, err := os.Open(filename)
 	if err != nil {
 		return fmt.Errorf("ExecuteByChunk: error when opening file: %s", err)
@@ -25,7 +25,7 @@ func ExecuteByChunk(filename, suffix string, chunkCount int) error {
 	byteCount, rest := fileSize/chunkCount, fileSize%chunkCount
 
 	reader := bufio.NewReader(readFile)
-	filenameGenerator := utils.NewFilenameGenerator()
+	filenameManager := utils.NewFilenameManager(suffixLength)
 
 	for i := 1; i < chunkCount; i++ {
 		chunks, _, err := utils.ReadChunksByByteCount(reader, byteCount)
@@ -33,12 +33,12 @@ func ExecuteByChunk(filename, suffix string, chunkCount int) error {
 			return fmt.Errorf("ExecuteByChunk: error when read chunks by byte count in loop : %s", err)
 		}
 
-		err = utils.CreateFileAndWrite("./tmp_dir/"+suffix+filenameGenerator.CurrentName, chunks)
+		err = utils.CreateFileAndWrite("./tmp_dir/"+suffix+string(filenameManager.CurrentRunes), chunks)
 		if err != nil {
 			return fmt.Errorf("ExecuteByChunk: error when create and write file in loop : %s", err)
 		}
 
-		filenameGenerator.Increment()
+		filenameManager.Increment()
 	}
 
 	chunks, _, err := utils.ReadChunksByByteCount(reader, byteCount+rest)
@@ -46,7 +46,7 @@ func ExecuteByChunk(filename, suffix string, chunkCount int) error {
 		return fmt.Errorf("ExecuteByChunk: error when read chunks by byte count : %s", err)
 	}
 
-	err = utils.CreateFileAndWrite("./tmp_dir/"+filenameGenerator.CurrentName, chunks)
+	err = utils.CreateFileAndWrite("./tmp_dir/"+string(filenameManager.CurrentRunes), chunks)
 	if err != nil {
 		return fmt.Errorf("ExecuteByChunk: error when create and write file : %s", err)
 	}

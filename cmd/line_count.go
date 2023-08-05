@@ -8,9 +8,7 @@ import (
 	"split_cmd/utils"
 )
 
-func ExecuteByLine(filename, suffix string, lineCount int) error {
-	buffer := NewScannerBuffer()
-
+func ExecuteByLine(filename, suffix string, suffixLength, lineCount int) error {
 	file, err := os.Open(filename)
 	if err != nil {
 		return fmt.Errorf("ExecuteByLine: error when opening file: %s", err)
@@ -18,7 +16,8 @@ func ExecuteByLine(filename, suffix string, lineCount int) error {
 	defer file.Close()
 
 	scanner := bufio.NewScanner(file)
-	filenameGenerator := utils.NewFilenameGenerator()
+	filenameManager := utils.NewFilenameManager(suffixLength)
+	buffer := NewScannerBuffer()
 
 	for scanner.Scan() {
 		withLF := append(scanner.Bytes(), []byte("\n")...)
@@ -28,17 +27,17 @@ func ExecuteByLine(filename, suffix string, lineCount int) error {
 
 		// 指定した行数に達したらファイルを作成して書き込み → バッファをリセットして再度行数をカウント
 		if buffer.lineCount == lineCount {
-			err := utils.CreateFileAndWrite("./tmp_dir/"+suffix+filenameGenerator.CurrentName, buffer.bytes)
+			err := utils.CreateFileAndWrite("./tmp_dir/"+suffix+string(filenameManager.CurrentRunes), buffer.bytes)
 			if err != nil {
 				return fmt.Errorf("ExecuteByLine: error when create and write file in loop: %s", err)
 			}
 			buffer.Reset()
-			filenameGenerator.Increment()
+			filenameManager.Increment()
 		}
 	}
 
 	if buffer.lineCount > 0 {
-		err := utils.CreateFileAndWrite("./tmp_dir/"+filenameGenerator.CurrentName, buffer.bytes)
+		err := utils.CreateFileAndWrite("./tmp_dir/"+string(filenameManager.CurrentRunes), buffer.bytes)
 		if err != nil {
 			return fmt.Errorf("ExecuteByLine: error when create and write file: %s", err)
 		}

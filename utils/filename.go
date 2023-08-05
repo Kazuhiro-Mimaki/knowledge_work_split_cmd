@@ -1,28 +1,38 @@
 package utils
 
-type Filename struct {
-	currentRunes []rune
+type FilenameManager struct {
+	CurrentRunes []rune
 }
 
-func NewFilename(currentRunes []rune) *Filename {
-	return &Filename{currentRunes}
+func NewFilenameManager(defaultRuneCount int) *FilenameManager {
+	var runes []rune
+	if defaultRuneCount == 0 {
+		// 指定がない場合はデフォルトで aa から開始
+		runes = []rune{'a', 'a'}
+	} else {
+		// 指定がある場合は defaultRuneCount * a から開始
+		for i := 0; i < defaultRuneCount; i++ {
+			runes = append(runes, 'a')
+		}
+	}
+	return &FilenameManager{runes}
 }
 
 // アルファベットを逆順で走査し、アルファベットをインクリメントする
-func (f *Filename) Increment() []rune {
-	tmp := f.currentRunes
+func (f *FilenameManager) Increment() []rune {
+	tmp := f.CurrentRunes
 	for i := 1; i <= len(tmp); i++ {
 		currentIndex := len(tmp) - i
 		currentChar := tmp[currentIndex]
 		if currentChar == 'z' {
-			f.currentRunes[currentIndex] = 'a'
+			f.CurrentRunes[currentIndex] = 'a'
 			if i == len(tmp) {
-				f.currentRunes = append(tmp, 'a')
+				f.CurrentRunes = append(tmp, 'a')
 			}
 		} else {
-			f.currentRunes[currentIndex] = currentChar + 1
+			f.CurrentRunes[currentIndex] = currentChar + 1
 			break
 		}
 	}
-	return f.currentRunes
+	return f.CurrentRunes
 }
