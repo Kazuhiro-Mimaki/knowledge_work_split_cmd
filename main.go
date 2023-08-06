@@ -74,9 +74,8 @@ func main() {
 			log.Fatal(err)
 		}
 	default:
-		if err := errors.New("only one option can be used: 'l' or 'n' or 'b' or 'a'"); err != nil {
-			log.Fatal(err)
-		}
+		err := errors.New("only one option can be used: 'l' or 'n' or 'b' or 'a'")
+		log.Fatal(err)
 	}
 
 	log.Print("success")
