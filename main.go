@@ -7,7 +7,7 @@ import (
 
 	"split_cmd/cmd"
 	"split_cmd/output_filename"
-	"split_cmd/utils"
+	"split_cmd/validation"
 )
 
 func main() {
@@ -27,7 +27,7 @@ func main() {
 
 	flag.Parse()
 
-	if err := utils.ValidateCmdArgs(flag.Args()); err != nil {
+	if err := validation.ValidateCmdArgs(flag.Args()); err != nil {
 		log.Fatal(err)
 	}
 
@@ -44,10 +44,10 @@ func main() {
 
 	filenameGenerator := output_filename.NewFilenameGenerator(a, suffix, d)
 
-	switch utils.Mode(l, n, b) {
+	switch validation.Mode(l, n, b) {
 	case "l":
 		// split file by line
-		if err := utils.ValidatePositive(l); err != nil {
+		if err := validation.ValidateIsPositive(l); err != nil {
 			log.Fatal(err)
 		}
 		if err := cmd.ExecuteByLine(readFilePath, l, filenameGenerator); err != nil {
@@ -55,7 +55,7 @@ func main() {
 		}
 	case "n":
 		// split file by chunk
-		if err := utils.ValidatePositive(n); err != nil {
+		if err := validation.ValidateIsPositive(n); err != nil {
 			log.Fatal(err)
 		}
 		if err := cmd.ExecuteByChunk(readFilePath, n, filenameGenerator); err != nil {
@@ -63,7 +63,7 @@ func main() {
 		}
 	case "b":
 		// split file by byte
-		if err := utils.ValidatePositive(n); err != nil {
+		if err := validation.ValidateIsPositive(n); err != nil {
 			log.Fatal(err)
 		}
 		if err := cmd.ExecuteByteCount(readFilePath, b, filenameGenerator); err != nil {

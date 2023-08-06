@@ -1,4 +1,4 @@
-package utils
+package validation
 
 import (
 	"errors"
@@ -7,24 +7,24 @@ import (
 
 func TestValidate(t *testing.T) {
 	t.Run("正の数", func(t *testing.T) {
-		got := ValidatePositive(13)
+		got := ValidateIsPositive(13)
 		if got != nil {
-			t.Errorf("ValidatePositive(13) == %v, want nil", got)
+			t.Errorf("ValidateIsPositive(13) == %v, want nil", got)
 		}
 	})
 
 	t.Run("0", func(t *testing.T) {
-		got := ValidatePositive(0)
+		got := ValidateIsPositive(0)
 		if got != nil {
-			t.Errorf("ValidatePositive(0) == %v, want nil", got)
+			t.Errorf("ValidateIsPositive(0) == %v, want nil", got)
 		}
 	})
 
 	t.Run("負の数", func(t *testing.T) {
-		got := ValidatePositive(-13)
+		got := ValidateIsPositive(-13)
 		want := errors.New("number must be positive")
 		if got.Error() != want.Error() {
-			t.Errorf("ValidatePositive(13) == %v, want %s", got, want)
+			t.Errorf("ValidateIsPositive(13) == %v, want %s", got, want)
 		}
 	})
 }

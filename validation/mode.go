@@ -1,4 +1,4 @@
-package utils
+package validation
 
 func Mode(l, n, b int) string {
 	if l != 0 && n == 0 && b == 0 {

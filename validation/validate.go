@@ -1,10 +1,10 @@
-package utils
+package validation
 
 import (
 	"errors"
 )
 
-func ValidatePositive(number int) (err error) {
+func ValidateIsPositive(number int) (err error) {
 	if number < 0 {
 		return errors.New("number must be positive")
 	}
@@ -12,7 +12,7 @@ func ValidatePositive(number int) (err error) {
 }
 
 func ValidateCmdArgs(args []string) (err error) {
-	if 0 < len(args) && len(args) < 3 {
+	if len(args) == 1 || len(args) == 2 {
 		return nil
 	}
 	return errors.New("invalid arguments")
