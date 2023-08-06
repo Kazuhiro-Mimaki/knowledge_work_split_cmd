@@ -5,10 +5,11 @@ import (
 	"fmt"
 	"os"
 
+	"split_cmd/output_filename"
 	"split_cmd/utils"
 )
 
-func ExecuteByChunk(readFilePath string, chunkCount int, filenameGenerator utils.IFilenameGenerator) error {
+func ExecuteByChunk(readFilePath string, chunkCount int, filenameGenerator output_filename.FilenameGenerator) error {
 	readFile, err := os.Open(readFilePath)
 	if err != nil {
 		return fmt.Errorf("ExecuteByChunk: error when opening file: %s", err)

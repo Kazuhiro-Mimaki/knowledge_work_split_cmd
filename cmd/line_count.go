@@ -5,10 +5,11 @@ import (
 	"fmt"
 	"os"
 
+	"split_cmd/output_filename"
 	"split_cmd/utils"
 )
 
-func ExecuteByLine(readFilePath string, lineCount int, filenameGenerator utils.IFilenameGenerator) error {
+func ExecuteByLine(readFilePath string, lineCount int, filenameGenerator output_filename.FilenameGenerator) error {
 	file, err := os.Open(readFilePath)
 	if err != nil {
 		return fmt.Errorf("ExecuteByLine: error when opening file: %s", err)

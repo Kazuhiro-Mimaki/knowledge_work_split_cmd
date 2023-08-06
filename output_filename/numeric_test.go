@@ -1,51 +1,51 @@
-package utils
+package output_filename
 
 import (
 	"reflect"
 	"testing"
 )
 
-func TestAlphabetFilenameGenerator(t *testing.T) {
+func TestNumericFilenameGenerator(t *testing.T) {
 	t.Run("引数指定がない場合", func(t *testing.T) {
-		filenameGenerator := NewAlphabetFilenameGenerator(0, "")
-		want := []rune{'a', 'a'}
+		filenameGenerator := NewNumericFilenameGenerator(0, "")
+		want := []rune{'0', '0'}
 		if !reflect.DeepEqual(filenameGenerator.GetCurrentRunes(), want) {
 			t.Errorf("filenameGenerator.GetCurrentRunes() == %v, want %v", filenameGenerator.GetCurrentRunes(), want)
 		}
 	})
 
 	t.Run("引数指定がある場合", func(t *testing.T) {
-		filenameGenerator := NewAlphabetFilenameGenerator(3, "")
-		want := []rune{'a', 'a', 'a'}
+		filenameGenerator := NewNumericFilenameGenerator(3, "")
+		want := []rune{'0', '0', '0'}
 		if !reflect.DeepEqual(filenameGenerator.GetCurrentRunes(), want) {
 			t.Errorf("filenameGenerator.GetCurrentRunes() == %v, want %v", filenameGenerator.GetCurrentRunes(), want)
 		}
 	})
 }
 
-func TestAlphabetIncrement(t *testing.T) {
+func TestNumericIncrement(t *testing.T) {
 	t.Run("正常ケース", func(t *testing.T) {
-		filenameGenerator := AlphabetFilenameGenerator{currentRunes: []rune{'a', 'a', 'a'}, suffix: ""}
+		filenameGenerator := NumericFilenameGenerator{currentRunes: []rune{'0', '0', '0'}, suffix: ""}
 		filenameGenerator.Increment()
-		want := []rune{'a', 'a', 'b'}
+		want := []rune{'0', '0', '1'}
 		if !reflect.DeepEqual(filenameGenerator.GetCurrentRunes(), want) {
 			t.Errorf("filenameGenerator.Increment() == %v, want %v", filenameGenerator.GetCurrentRunes(), want)
 		}
 	})
 
-	t.Run("正常ケース (最後尾がzの場合)", func(t *testing.T) {
-		filenameGenerator := AlphabetFilenameGenerator{currentRunes: []rune{'a', 'a', 'z'}, suffix: ""}
+	t.Run("正常ケース (最後尾が9の場合)", func(t *testing.T) {
+		filenameGenerator := NumericFilenameGenerator{currentRunes: []rune{'0', '0', '9'}, suffix: ""}
 		filenameGenerator.Increment()
-		want := []rune{'a', 'b', 'a'}
+		want := []rune{'0', '1', '0'}
 		if !reflect.DeepEqual(filenameGenerator.GetCurrentRunes(), want) {
 			t.Errorf("filenameGenerator.Increment() == %v, want %v", filenameGenerator.GetCurrentRunes(), want)
 		}
 	})
 
-	t.Run("正常ケース (全てzの場合)", func(t *testing.T) {
-		filenameGenerator := AlphabetFilenameGenerator{currentRunes: []rune{'z', 'z', 'z'}, suffix: ""}
+	t.Run("正常ケース (全て9の場合)", func(t *testing.T) {
+		filenameGenerator := NumericFilenameGenerator{currentRunes: []rune{'9', '9', '9'}, suffix: ""}
 		filenameGenerator.Increment()
-		want := []rune{'a', 'a', 'a', 'a'}
+		want := []rune{'0', '0', '0', '0'}
 		if !reflect.DeepEqual(filenameGenerator.GetCurrentRunes(), want) {
 			t.Errorf("filenameGenerator.Increment() == %v, want %v", filenameGenerator.GetCurrentRunes(), want)
 		}

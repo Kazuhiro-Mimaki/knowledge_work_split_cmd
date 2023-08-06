@@ -5,10 +5,11 @@ import (
 	"fmt"
 	"os"
 
+	"split_cmd/output_filename"
 	"split_cmd/utils"
 )
 
-func ExecuteByteCount(readFilePath string, byteCount int, filenameGenerator utils.IFilenameGenerator) error {
+func ExecuteByteCount(readFilePath string, byteCount int, filenameGenerator output_filename.FilenameGenerator) error {
 	readFile, err := os.Open(readFilePath)
 	if err != nil {
 		return fmt.Errorf("ExecuteByteCount: error when opening file: %s", err)

@@ -1,11 +1,11 @@
-package utils
+package output_filename
 
 type NumericFilenameGenerator struct {
 	currentRunes []rune
 	suffix       string
 }
 
-func NewNumericFilenameGenerator(defaultRuneCount int, suffix string) IFilenameGenerator {
+func NewNumericFilenameGenerator(defaultRuneCount int, suffix string) FilenameGenerator {
 	var runes []rune
 	if defaultRuneCount == 0 {
 		// 指定がない場合はデフォルトで 00 から開始

@@ -6,6 +6,7 @@ import (
 	"log"
 
 	"split_cmd/cmd"
+	"split_cmd/output_filename"
 	"split_cmd/utils"
 )
 
@@ -41,7 +42,7 @@ func main() {
 		readFilePath, suffix = flag.Arg(0), flag.Arg(1)
 	}
 
-	filenameGenerator := utils.NewFilenameGenerator(a, suffix, d)
+	filenameGenerator := output_filename.NewFilenameGenerator(a, suffix, d)
 
 	switch utils.Mode(l, n, b) {
 	case "l":
