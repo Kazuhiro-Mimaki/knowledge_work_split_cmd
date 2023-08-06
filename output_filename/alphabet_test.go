@@ -6,7 +6,7 @@ import (
 )
 
 func TestAlphabetOutputFilenameGenerator(t *testing.T) {
-	t.Run("引数指定がない場合", func(t *testing.T) {
+	t.Run("正常系 (引数指定がない場合)", func(t *testing.T) {
 		filenameGenerator := NewAlphabetFilenameGenerator(0, "")
 		want := "aa"
 		if !reflect.DeepEqual(filenameGenerator.GetOutputFilePath(), want) {
@@ -14,7 +14,7 @@ func TestAlphabetOutputFilenameGenerator(t *testing.T) {
 		}
 	})
 
-	t.Run("引数指定がある場合", func(t *testing.T) {
+	t.Run("正常系 (引数指定がある場合)", func(t *testing.T) {
 		filenameGenerator := NewAlphabetFilenameGenerator(3, "")
 		want := "aaa"
 		if !reflect.DeepEqual(filenameGenerator.GetOutputFilePath(), want) {
@@ -22,7 +22,7 @@ func TestAlphabetOutputFilenameGenerator(t *testing.T) {
 		}
 	})
 
-	t.Run("suffix指定がある場合", func(t *testing.T) {
+	t.Run("正常系 (suffix指定がある場合)", func(t *testing.T) {
 		filenameGenerator := NewAlphabetFilenameGenerator(3, "suffix_")
 		want := "suffix_aaa"
 		if !reflect.DeepEqual(filenameGenerator.GetOutputFilePath(), want) {
@@ -32,7 +32,7 @@ func TestAlphabetOutputFilenameGenerator(t *testing.T) {
 }
 
 func TestAlphabetIncrement(t *testing.T) {
-	t.Run("正常ケース", func(t *testing.T) {
+	t.Run("正常系", func(t *testing.T) {
 		filenameGenerator := AlphabetFilenameGenerator{currentRunes: []rune{'a', 'a', 'a'}, suffix: ""}
 		filenameGenerator.Increment()
 		want := "aab"
@@ -41,7 +41,7 @@ func TestAlphabetIncrement(t *testing.T) {
 		}
 	})
 
-	t.Run("正常ケース (最後尾がzの場合)", func(t *testing.T) {
+	t.Run("正常系 (最後尾がzの場合)", func(t *testing.T) {
 		filenameGenerator := AlphabetFilenameGenerator{currentRunes: []rune{'a', 'a', 'z'}, suffix: ""}
 		filenameGenerator.Increment()
 		want := "aba"
@@ -50,7 +50,7 @@ func TestAlphabetIncrement(t *testing.T) {
 		}
 	})
 
-	t.Run("正常ケース (全てzの場合)", func(t *testing.T) {
+	t.Run("正常系 (全てzの場合)", func(t *testing.T) {
 		filenameGenerator := AlphabetFilenameGenerator{currentRunes: []rune{'z', 'z', 'z'}, suffix: ""}
 		filenameGenerator.Increment()
 		want := "aaaa"
@@ -59,7 +59,7 @@ func TestAlphabetIncrement(t *testing.T) {
 		}
 	})
 
-	t.Run("正常ケース (suffix指定がある場合)", func(t *testing.T) {
+	t.Run("正常系 (suffix指定がある場合)", func(t *testing.T) {
 		filenameGenerator := AlphabetFilenameGenerator{currentRunes: []rune{'z', 'z', 'z'}, suffix: "suffix_"}
 		filenameGenerator.Increment()
 		want := "suffix_aaaa"

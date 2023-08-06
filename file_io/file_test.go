@@ -8,7 +8,7 @@ import (
 )
 
 func TestReadChunksByByteCount(t *testing.T) {
-	t.Run("バイト列の最初から2つを読み取る", func(t *testing.T) {
+	t.Run("正常系 (バイト列の最初から2つを読み取る)", func(t *testing.T) {
 		mockBuff := bytes.NewBuffer([]byte{'A', 'B', 'C'})
 		reader := bufio.NewReader(mockBuff)
 
@@ -24,7 +24,8 @@ func TestReadChunksByByteCount(t *testing.T) {
 			t.Errorf("cursor == %d, want %d", cursor, wantCursor)
 		}
 	})
-	t.Run("バイト列の最初から5つを読み取る", func(t *testing.T) {
+
+	t.Run("正常系 (バイト列の最初から5つを読み取る)", func(t *testing.T) {
 		mockBuff := bytes.NewBuffer([]byte{'A', 'B', 'C'})
 		reader := bufio.NewReader(mockBuff)
 
@@ -40,7 +41,8 @@ func TestReadChunksByByteCount(t *testing.T) {
 			t.Errorf("cursor == %d, want %d", cursor, wantCursor)
 		}
 	})
-	t.Run("バイト列の終端まで繰り返し読み取る", func(t *testing.T) {
+
+	t.Run("正常系 (バイト列の終端まで繰り返し読み取る)", func(t *testing.T) {
 		mockBuff := bytes.NewBuffer([]byte{'A', 'B', 'C'})
 		reader := bufio.NewReader(mockBuff)
 
@@ -63,7 +65,7 @@ func TestReadChunksByByteCount(t *testing.T) {
 }
 
 func TestWriteChunks(t *testing.T) {
-	t.Run("バイト列を書き込む", func(t *testing.T) {
+	t.Run("正常系 (バイト列を書き込む)", func(t *testing.T) {
 		outputBuff := bytes.NewBuffer([]byte{})
 		writer := bufio.NewWriter(outputBuff)
 
@@ -75,7 +77,8 @@ func TestWriteChunks(t *testing.T) {
 			t.Errorf("output == %s, want %s", outputBuff.Bytes(), want)
 		}
 	})
-	t.Run("バイト列が空の場合", func(t *testing.T) {
+
+	t.Run("正常系 (バイト列が空の場合)", func(t *testing.T) {
 		outputBuff := bytes.NewBuffer([]byte{})
 		writer := bufio.NewWriter(outputBuff)
 

@@ -5,7 +5,7 @@ import (
 )
 
 func TestMode(t *testing.T) {
-	t.Run("lモード", func(t *testing.T) {
+	t.Run("正常系 (lモード)", func(t *testing.T) {
 		got := Mode(1, 0, 0)
 		want := "l"
 		if got != want {
@@ -13,7 +13,7 @@ func TestMode(t *testing.T) {
 		}
 	})
 
-	t.Run("nモード", func(t *testing.T) {
+	t.Run("正常系 (nモード)", func(t *testing.T) {
 		got := Mode(0, 1, 0)
 		want := "n"
 		if got != want {
@@ -21,7 +21,7 @@ func TestMode(t *testing.T) {
 		}
 	})
 
-	t.Run("bモード", func(t *testing.T) {
+	t.Run("正常系 (bモード)", func(t *testing.T) {
 		got := Mode(0, 0, 1)
 		want := "b"
 		if got != want {
@@ -29,7 +29,7 @@ func TestMode(t *testing.T) {
 		}
 	})
 
-	t.Run("引数なし", func(t *testing.T) {
+	t.Run("正常系 (引数なし)", func(t *testing.T) {
 		got := Mode(0, 0, 0)
 		want := "noArgs"
 		if got != want {
@@ -37,7 +37,7 @@ func TestMode(t *testing.T) {
 		}
 	})
 
-	t.Run("不正な入力(2つの入力値が存在する)", func(t *testing.T) {
+	t.Run("異常系 (不正な入力(2つの入力値が存在する))", func(t *testing.T) {
 		got := Mode(0, 1, 1)
 		want := ""
 		if got != want {
@@ -45,7 +45,7 @@ func TestMode(t *testing.T) {
 		}
 	})
 
-	t.Run("不正な入力(全て入力値が存在する)", func(t *testing.T) {
+	t.Run("異常系 (全て入力値が存在する)", func(t *testing.T) {
 		got := Mode(1, 1, 1)
 		want := ""
 		if got != want {
