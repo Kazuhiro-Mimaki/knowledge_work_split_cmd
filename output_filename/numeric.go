@@ -29,14 +29,14 @@ func (f *NumericFilenameGenerator) GetOutputFilePath() string {
 
 // 数字を逆順で走査し、インクリメントする
 func (f *NumericFilenameGenerator) Increment() []rune {
-	tmp := f.currentRunes
-	for i := 1; i <= len(tmp); i++ {
-		currentIndex := len(tmp) - i
-		currentChar := tmp[currentIndex]
+	nameLength := len(f.currentRunes)
+	for i := 1; i <= nameLength; i++ {
+		currentIndex := nameLength - i
+		currentChar := f.currentRunes[currentIndex]
 		if currentChar == '9' {
 			f.currentRunes[currentIndex] = '0'
-			if i == len(tmp) {
-				f.currentRunes = append(tmp, '0')
+			if i == nameLength {
+				f.currentRunes = append(f.currentRunes, '0')
 			}
 		} else {
 			f.currentRunes[currentIndex] = currentChar + 1
