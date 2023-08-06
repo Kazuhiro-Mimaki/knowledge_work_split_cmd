@@ -3,16 +3,17 @@ package utils
 type IFilenameGenerator interface {
 	Increment() []rune
 	GetCurrentRunes() []rune
+	GetOutputFilePath() string
 }
 
 type FilenameGenerator struct {
 	CurrentRunes []rune
 }
 
-func NewFilenameGenerator(defaultRuneCount int, isNumeric bool) IFilenameGenerator {
+func NewFilenameGenerator(defaultRuneCount int, suffix string, isNumeric bool) IFilenameGenerator {
 	if isNumeric {
-		return NewNumericFilenameGenerator(defaultRuneCount)
+		return NewNumericFilenameGenerator(defaultRuneCount, suffix)
 	} else {
-		return NewAlphabetFilenameGenerator(defaultRuneCount)
+		return NewAlphabetFilenameGenerator(defaultRuneCount, suffix)
 	}
 }

@@ -2,9 +2,10 @@ package utils
 
 type AlphabetFilenameGenerator struct {
 	currentRunes []rune
+	suffix       string
 }
 
-func NewAlphabetFilenameGenerator(defaultRuneCount int) IFilenameGenerator {
+func NewAlphabetFilenameGenerator(defaultRuneCount int, suffix string) IFilenameGenerator {
 	var runes []rune
 	if defaultRuneCount == 0 {
 		// 指定がない場合はデフォルトで aa から開始
@@ -15,11 +16,15 @@ func NewAlphabetFilenameGenerator(defaultRuneCount int) IFilenameGenerator {
 			runes = append(runes, 'a')
 		}
 	}
-	return &AlphabetFilenameGenerator{runes}
+	return &AlphabetFilenameGenerator{currentRunes: runes, suffix: suffix}
 }
 
 func (f *AlphabetFilenameGenerator) GetCurrentRunes() []rune {
 	return f.currentRunes
+}
+
+func (f *AlphabetFilenameGenerator) GetOutputFilePath() string {
+	return "./tmp_dir/" + f.suffix + string(f.GetCurrentRunes())
 }
 
 // アルファベットを逆順で走査し、インクリメントする

@@ -31,17 +31,17 @@ func main() {
 	}
 
 	var (
-		filename string
-		suffix   string
+		readFilePath string
+		suffix       string
 	)
 
 	if len(flag.Args()) == 1 {
-		filename = flag.Arg(0)
+		readFilePath, suffix = flag.Arg(0), ""
 	} else if len(flag.Args()) == 2 {
-		filename, suffix = flag.Arg(0), flag.Arg(1)
+		readFilePath, suffix = flag.Arg(0), flag.Arg(1)
 	}
 
-	filenameGenerator := utils.NewFilenameGenerator(a, d)
+	filenameGenerator := utils.NewFilenameGenerator(a, suffix, d)
 
 	switch utils.Mode(l, n, b) {
 	case "l":
@@ -49,7 +49,7 @@ func main() {
 		if err := utils.ValidatePositive(l); err != nil {
 			log.Fatal(err)
 		}
-		if err := cmd.ExecuteByLine(filename, suffix, l, filenameGenerator); err != nil {
+		if err := cmd.ExecuteByLine(readFilePath, l, filenameGenerator); err != nil {
 			log.Fatal(err)
 		}
 	case "n":
@@ -57,7 +57,7 @@ func main() {
 		if err := utils.ValidatePositive(n); err != nil {
 			log.Fatal(err)
 		}
-		if err := cmd.ExecuteByChunk(filename, suffix, n, filenameGenerator); err != nil {
+		if err := cmd.ExecuteByChunk(readFilePath, n, filenameGenerator); err != nil {
 			log.Fatal(err)
 		}
 	case "b":
@@ -65,12 +65,12 @@ func main() {
 		if err := utils.ValidatePositive(n); err != nil {
 			log.Fatal(err)
 		}
-		if err := cmd.ExecuteByteCount(filename, suffix, b, filenameGenerator); err != nil {
+		if err := cmd.ExecuteByteCount(readFilePath, b, filenameGenerator); err != nil {
 			log.Fatal(err)
 		}
 	case "noArgs":
 		// 引数がない場合は1つのファイルに書き込む
-		if err := cmd.ExecuteByChunk(filename, suffix, 1, filenameGenerator); err != nil {
+		if err := cmd.ExecuteByChunk(readFilePath, 1, filenameGenerator); err != nil {
 			log.Fatal(err)
 		}
 	default:

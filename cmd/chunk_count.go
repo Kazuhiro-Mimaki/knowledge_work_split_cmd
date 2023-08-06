@@ -8,8 +8,8 @@ import (
 	"split_cmd/utils"
 )
 
-func ExecuteByChunk(filename, suffix string, chunkCount int, filenameGenerator utils.IFilenameGenerator) error {
-	readFile, err := os.Open(filename)
+func ExecuteByChunk(readFilePath string, chunkCount int, filenameGenerator utils.IFilenameGenerator) error {
+	readFile, err := os.Open(readFilePath)
 	if err != nil {
 		return fmt.Errorf("ExecuteByChunk: error when opening file: %s", err)
 	}
@@ -32,7 +32,7 @@ func ExecuteByChunk(filename, suffix string, chunkCount int, filenameGenerator u
 			return fmt.Errorf("ExecuteByChunk: error when read chunks by byte count in loop : %s", err)
 		}
 
-		err = utils.CreateFileAndWrite("./tmp_dir/"+suffix+string(filenameGenerator.GetCurrentRunes()), chunks)
+		err = utils.CreateFileAndWrite(filenameGenerator.GetOutputFilePath(), chunks)
 		if err != nil {
 			return fmt.Errorf("ExecuteByChunk: error when create and write file in loop : %s", err)
 		}
@@ -45,7 +45,7 @@ func ExecuteByChunk(filename, suffix string, chunkCount int, filenameGenerator u
 		return fmt.Errorf("ExecuteByChunk: error when read chunks by byte count : %s", err)
 	}
 
-	err = utils.CreateFileAndWrite("./tmp_dir/"+suffix+string(filenameGenerator.GetCurrentRunes()), chunks)
+	err = utils.CreateFileAndWrite(filenameGenerator.GetOutputFilePath(), chunks)
 	if err != nil {
 		return fmt.Errorf("ExecuteByChunk: error when create and write file : %s", err)
 	}
