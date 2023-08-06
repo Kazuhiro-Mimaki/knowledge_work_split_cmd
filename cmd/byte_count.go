@@ -5,8 +5,8 @@ import (
 	"fmt"
 	"os"
 
+	"split_cmd/file_io"
 	"split_cmd/output_filename"
-	"split_cmd/utils"
 )
 
 func ExecuteByteCount(readFilePath string, byteCount int, filenameGenerator output_filename.FilenameGenerator) error {
@@ -19,7 +19,7 @@ func ExecuteByteCount(readFilePath string, byteCount int, filenameGenerator outp
 	reader := bufio.NewReader(readFile)
 
 	for {
-		chunks, cursor, err := utils.ReadChunksByByteCount(reader, byteCount)
+		chunks, cursor, err := file_io.ReadChunksByByteCount(reader, byteCount)
 		if err != nil {
 			if err.Error() == "EOF" {
 				break
@@ -27,7 +27,7 @@ func ExecuteByteCount(readFilePath string, byteCount int, filenameGenerator outp
 			return fmt.Errorf("ExecuteByteCount: error when read chunks by byte count in loop: %s", err)
 		}
 
-		err = utils.CreateFileAndWrite(filenameGenerator.GetOutputFilePath(), chunks)
+		err = file_io.CreateFileAndWrite(filenameGenerator.GetOutputFilePath(), chunks)
 		if err != nil {
 			return fmt.Errorf("ExecuteByteCount: error when create and write file by byte count: %s", err)
 		}

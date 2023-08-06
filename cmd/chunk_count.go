@@ -5,8 +5,8 @@ import (
 	"fmt"
 	"os"
 
+	"split_cmd/file_io"
 	"split_cmd/output_filename"
-	"split_cmd/utils"
 )
 
 func ExecuteByChunk(readFilePath string, chunkCount int, filenameGenerator output_filename.FilenameGenerator) error {
@@ -16,7 +16,7 @@ func ExecuteByChunk(readFilePath string, chunkCount int, filenameGenerator outpu
 	}
 	defer readFile.Close()
 
-	fileSize, err := utils.GetFileSize(readFile)
+	fileSize, err := file_io.GetFileSize(readFile)
 	if err != nil {
 		return fmt.Errorf("ExecuteByChunk: error when get file size %d files", err)
 	}
@@ -28,12 +28,12 @@ func ExecuteByChunk(readFilePath string, chunkCount int, filenameGenerator outpu
 	reader := bufio.NewReader(readFile)
 
 	for i := 1; i < chunkCount; i++ {
-		chunks, _, err := utils.ReadChunksByByteCount(reader, byteCount)
+		chunks, _, err := file_io.ReadChunksByByteCount(reader, byteCount)
 		if err != nil {
 			return fmt.Errorf("ExecuteByChunk: error when read chunks by byte count in loop : %s", err)
 		}
 
-		err = utils.CreateFileAndWrite(filenameGenerator.GetOutputFilePath(), chunks)
+		err = file_io.CreateFileAndWrite(filenameGenerator.GetOutputFilePath(), chunks)
 		if err != nil {
 			return fmt.Errorf("ExecuteByChunk: error when create and write file in loop : %s", err)
 		}
@@ -41,12 +41,12 @@ func ExecuteByChunk(readFilePath string, chunkCount int, filenameGenerator outpu
 		filenameGenerator.Increment()
 	}
 
-	chunks, _, err := utils.ReadChunksByByteCount(reader, byteCount+rest)
+	chunks, _, err := file_io.ReadChunksByByteCount(reader, byteCount+rest)
 	if err != nil {
 		return fmt.Errorf("ExecuteByChunk: error when read chunks by byte count : %s", err)
 	}
 
-	err = utils.CreateFileAndWrite(filenameGenerator.GetOutputFilePath(), chunks)
+	err = file_io.CreateFileAndWrite(filenameGenerator.GetOutputFilePath(), chunks)
 	if err != nil {
 		return fmt.Errorf("ExecuteByChunk: error when create and write file : %s", err)
 	}
