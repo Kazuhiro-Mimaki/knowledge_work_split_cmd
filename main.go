@@ -47,24 +47,24 @@ func main() {
 	switch validation.Mode(l, n, b) {
 	case "l":
 		// split file by line
-		if err := validation.ValidateIsPositive(l); err != nil {
-			log.Fatal(err)
+		if isPositive := validation.IsPositive(l); isPositive != true {
+			log.Fatal("number must be positive")
 		}
 		if err := cmd.ExecuteByLine(readFilePath, l, filenameGenerator); err != nil {
 			log.Fatal(err)
 		}
 	case "n":
 		// split file by chunk
-		if err := validation.ValidateIsPositive(n); err != nil {
-			log.Fatal(err)
+		if isPositive := validation.IsPositive(n); isPositive != true {
+			log.Fatal("number must be positive")
 		}
 		if err := cmd.ExecuteByChunk(readFilePath, n, filenameGenerator); err != nil {
 			log.Fatal(err)
 		}
 	case "b":
 		// split file by byte
-		if err := validation.ValidateIsPositive(n); err != nil {
-			log.Fatal(err)
+		if isPositive := validation.IsPositive(b); isPositive != true {
+			log.Fatal("number must be positive")
 		}
 		if err := cmd.ExecuteByteCount(readFilePath, b, filenameGenerator); err != nil {
 			log.Fatal(err)

@@ -4,14 +4,12 @@ import (
 	"errors"
 )
 
-func ValidateIsPositive(number int) (err error) {
-	if number < 0 {
-		return errors.New("number must be positive")
-	}
-	return nil
+func IsPositive(number int) bool {
+	return number >= 0
 }
 
 func ValidateCmdArgs(args []string) (err error) {
+	// ファイル名とsuffixのみ引数で受け付けるため、1 or 2以外はエラーとして扱う
 	if len(args) == 1 || len(args) == 2 {
 		return nil
 	}
