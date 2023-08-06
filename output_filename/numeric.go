@@ -24,7 +24,7 @@ func (f *NumericFilenameGenerator) GetCurrentRunes() []rune {
 }
 
 func (f *NumericFilenameGenerator) GetOutputFilePath() string {
-	return "./tmp_dir/" + f.suffix + string(f.GetCurrentRunes())
+	return f.suffix + string(f.GetCurrentRunes())
 }
 
 // 数字を逆順で走査し、インクリメントする

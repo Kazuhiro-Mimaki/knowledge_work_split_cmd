@@ -24,7 +24,7 @@ func (f *AlphabetFilenameGenerator) GetCurrentRunes() []rune {
 }
 
 func (f *AlphabetFilenameGenerator) GetOutputFilePath() string {
-	return "./tmp_dir/" + f.suffix + string(f.GetCurrentRunes())
+	return f.suffix + string(f.GetCurrentRunes())
 }
 
 // アルファベットを逆順で走査し、インクリメントする

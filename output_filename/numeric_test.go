@@ -5,49 +5,66 @@ import (
 	"testing"
 )
 
-func TestNumericFilenameGenerator(t *testing.T) {
+func TestNumericOutputFilenameGenerator(t *testing.T) {
 	t.Run("引数指定がない場合", func(t *testing.T) {
 		filenameGenerator := NewNumericFilenameGenerator(0, "")
-		want := []rune{'0', '0'}
-		if !reflect.DeepEqual(filenameGenerator.GetCurrentRunes(), want) {
-			t.Errorf("filenameGenerator.GetCurrentRunes() == %v, want %v", filenameGenerator.GetCurrentRunes(), want)
+		want := "00"
+		if !reflect.DeepEqual(filenameGenerator.GetOutputFilePath(), want) {
+			t.Errorf("filenameGenerator.GetOutputFilePath() == %v, want %v", filenameGenerator.GetOutputFilePath(), want)
 		}
 	})
 
 	t.Run("引数指定がある場合", func(t *testing.T) {
 		filenameGenerator := NewNumericFilenameGenerator(3, "")
-		want := []rune{'0', '0', '0'}
-		if !reflect.DeepEqual(filenameGenerator.GetCurrentRunes(), want) {
-			t.Errorf("filenameGenerator.GetCurrentRunes() == %v, want %v", filenameGenerator.GetCurrentRunes(), want)
+		want := "000"
+		if !reflect.DeepEqual(filenameGenerator.GetOutputFilePath(), want) {
+			t.Errorf("filenameGenerator.GetOutputFilePath() == %v, want %v", filenameGenerator.GetOutputFilePath(), want)
+		}
+	})
+
+	t.Run("suffix指定がある場合", func(t *testing.T) {
+		filenameGenerator := NewNumericFilenameGenerator(3, "suffix_")
+		want := "suffix_000"
+		if !reflect.DeepEqual(filenameGenerator.GetOutputFilePath(), want) {
+			t.Errorf("filenameGenerator.GetOutputFilePath() == %v, want %v", filenameGenerator.GetOutputFilePath(), want)
 		}
 	})
 }
 
-func TestNumericIncrement(t *testing.T) {
+func TestNumericOutputFilenameIncrement(t *testing.T) {
 	t.Run("正常ケース", func(t *testing.T) {
 		filenameGenerator := NumericFilenameGenerator{currentRunes: []rune{'0', '0', '0'}, suffix: ""}
 		filenameGenerator.Increment()
-		want := []rune{'0', '0', '1'}
-		if !reflect.DeepEqual(filenameGenerator.GetCurrentRunes(), want) {
-			t.Errorf("filenameGenerator.Increment() == %v, want %v", filenameGenerator.GetCurrentRunes(), want)
+		want := "001"
+		if !reflect.DeepEqual(filenameGenerator.GetOutputFilePath(), want) {
+			t.Errorf("filenameGenerator.Increment() == %v, want %v", filenameGenerator.GetOutputFilePath(), want)
 		}
 	})
 
 	t.Run("正常ケース (最後尾が9の場合)", func(t *testing.T) {
 		filenameGenerator := NumericFilenameGenerator{currentRunes: []rune{'0', '0', '9'}, suffix: ""}
 		filenameGenerator.Increment()
-		want := []rune{'0', '1', '0'}
-		if !reflect.DeepEqual(filenameGenerator.GetCurrentRunes(), want) {
-			t.Errorf("filenameGenerator.Increment() == %v, want %v", filenameGenerator.GetCurrentRunes(), want)
+		want := "010"
+		if !reflect.DeepEqual(filenameGenerator.GetOutputFilePath(), want) {
+			t.Errorf("filenameGenerator.Increment() == %v, want %v", filenameGenerator.GetOutputFilePath(), want)
 		}
 	})
 
 	t.Run("正常ケース (全て9の場合)", func(t *testing.T) {
 		filenameGenerator := NumericFilenameGenerator{currentRunes: []rune{'9', '9', '9'}, suffix: ""}
 		filenameGenerator.Increment()
-		want := []rune{'0', '0', '0', '0'}
-		if !reflect.DeepEqual(filenameGenerator.GetCurrentRunes(), want) {
-			t.Errorf("filenameGenerator.Increment() == %v, want %v", filenameGenerator.GetCurrentRunes(), want)
+		want := "0000"
+		if !reflect.DeepEqual(filenameGenerator.GetOutputFilePath(), want) {
+			t.Errorf("filenameGenerator.Increment() == %v, want %v", filenameGenerator.GetOutputFilePath(), want)
+		}
+	})
+
+	t.Run("正常ケース (suffix指定がある場合)", func(t *testing.T) {
+		filenameGenerator := NumericFilenameGenerator{currentRunes: []rune{'9', '9', '9'}, suffix: "suffix_"}
+		filenameGenerator.Increment()
+		want := "suffix_0000"
+		if !reflect.DeepEqual(filenameGenerator.GetOutputFilePath(), want) {
+			t.Errorf("filenameGenerator.Increment() == %v, want %v", filenameGenerator.GetOutputFilePath(), want)
 		}
 	})
 }
