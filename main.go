@@ -6,7 +6,7 @@ import (
 	"log"
 
 	"split_cmd/cmd"
-	"split_cmd/output_filename"
+	"split_cmd/filename_generator"
 	"split_cmd/validation"
 )
 
@@ -34,6 +34,7 @@ func main() {
 	var (
 		readFilePath string
 		suffix       string
+		mode         filename_generator.Mode
 	)
 
 	if len(flag.Args()) == 1 {
@@ -42,7 +43,13 @@ func main() {
 		readFilePath, suffix = flag.Arg(0), flag.Arg(1)
 	}
 
-	filenameGenerator := output_filename.NewFilenameGenerator(a, suffix, d)
+	if d == true {
+		mode = filename_generator.NUMERIC
+	} else {
+		mode = filename_generator.ALPHABET
+	}
+
+	filenameGenerator := filename_generator.New(a, suffix, mode)
 
 	switch validation.Mode(l, n, b) {
 	case "l":

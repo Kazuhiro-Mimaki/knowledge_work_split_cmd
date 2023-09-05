@@ -6,10 +6,10 @@ import (
 	"os"
 
 	"split_cmd/file_io"
-	"split_cmd/output_filename"
+	"split_cmd/filename_generator"
 )
 
-func ExecuteByLine(readFilePath string, lineCount int, filenameGenerator output_filename.FilenameGenerator) error {
+func ExecuteByLine(readFilePath string, lineCount int, filenameGenerator filename_generator.FilenameGenerator) error {
 	file, err := os.Open(readFilePath)
 	if err != nil {
 		return fmt.Errorf("ExecuteByLine: error when opening file: %s", err)
@@ -27,7 +27,7 @@ func ExecuteByLine(readFilePath string, lineCount int, filenameGenerator output_
 
 		// 指定した行数に達したらファイルを作成して書き込み → バッファをリセットして再度行数をカウント
 		if buffer.lineCount == lineCount {
-			err := file_io.CreateFileAndWrite(filenameGenerator.GetOutputFilePath(), buffer.bytes)
+			err := file_io.CreateFileAndWrite(filenameGenerator.GetCurrentWithSuffix(), buffer.bytes)
 			if err != nil {
 				return fmt.Errorf("ExecuteByLine: error when create and write file in loop: %s", err)
 			}
@@ -37,7 +37,7 @@ func ExecuteByLine(readFilePath string, lineCount int, filenameGenerator output_
 	}
 
 	if buffer.lineCount > 0 {
-		err := file_io.CreateFileAndWrite(filenameGenerator.GetOutputFilePath(), buffer.bytes)
+		err := file_io.CreateFileAndWrite(filenameGenerator.GetCurrentWithSuffix(), buffer.bytes)
 		if err != nil {
 			return fmt.Errorf("ExecuteByLine: error when create and write file: %s", err)
 		}
