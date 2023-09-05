@@ -1,5 +1,7 @@
 package filename_generator
 
+import "errors"
+
 type Mode int
 
 const (
@@ -9,20 +11,14 @@ const (
 
 type FilenameGenerator struct {
 	currentRunes []rune
-	suffix       string
+	prefix       string
 	mode         Mode
 }
 
-func New(initialRuneCount int, suffix string, mode Mode) FilenameGenerator {
-	var initialRune rune
-
-	switch mode {
-	case ALPHABET:
-		initialRune = 'a'
-	case NUMERIC:
-		initialRune = '0'
-	default:
-		panic("invalid mode")
+func New(initialRuneCount int, prefix string, mode Mode) (FilenameGenerator, error) {
+	initialRune, _, err := runeByMode(mode)
+	if err != nil {
+		return FilenameGenerator{}, err
 	}
 
 	var runes []rune
@@ -36,32 +32,18 @@ func New(initialRuneCount int, suffix string, mode Mode) FilenameGenerator {
 		}
 	}
 
-	return FilenameGenerator{currentRunes: runes, suffix: suffix, mode: mode}
+	return FilenameGenerator{currentRunes: runes, prefix: prefix, mode: mode}, nil
 }
 
-func (f FilenameGenerator) GetCurrent() []rune {
-	return f.currentRunes
-}
-
-func (f FilenameGenerator) GetCurrentWithSuffix() string {
-	return f.suffix + string(f.GetCurrent())
-}
-
-func (f FilenameGenerator) GetMode() Mode {
-	return f.mode
+func (f FilenameGenerator) GetCurrentWithPrefix() string {
+	return f.prefix + string(f.currentRunes)
 }
 
 // アルファベットまたは数字 を逆順で走査し、インクリメントする
-func (f *FilenameGenerator) Increment() []rune {
-	var initialRune, lastRune rune
-
-	switch f.GetMode() {
-	case ALPHABET:
-		initialRune, lastRune = 'a', 'z'
-	case NUMERIC:
-		initialRune, lastRune = '0', '9'
-	default:
-		panic("invalid mode")
+func (f *FilenameGenerator) Increment() ([]rune, error) {
+	initialRune, lastRune, err := runeByMode(f.mode)
+	if err != nil {
+		return []rune{}, err
 	}
 
 	nameLength := len(f.currentRunes)
@@ -78,5 +60,16 @@ func (f *FilenameGenerator) Increment() []rune {
 			break
 		}
 	}
-	return f.currentRunes
+	return f.currentRunes, nil
+}
+
+func runeByMode(mode Mode) (rune, rune, error) {
+	switch mode {
+	case ALPHABET:
+		return 'a', 'z', nil
+	case NUMERIC:
+		return '0', '9', nil
+	default:
+		return 0, 0, errors.New("invalid mode")
+	}
 }

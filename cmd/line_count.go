@@ -27,7 +27,7 @@ func ExecuteByLine(readFilePath string, lineCount int, filenameGenerator filenam
 
 		// 指定した行数に達したらファイルを作成して書き込み → バッファをリセットして再度行数をカウント
 		if buffer.lineCount == lineCount {
-			err := file_io.CreateFileAndWrite(filenameGenerator.GetCurrentWithSuffix(), buffer.bytes)
+			err := file_io.CreateFileAndWrite(filenameGenerator.GetCurrentWithPrefix(), buffer.bytes)
 			if err != nil {
 				return fmt.Errorf("ExecuteByLine: error when create and write file in loop: %s", err)
 			}
@@ -37,7 +37,7 @@ func ExecuteByLine(readFilePath string, lineCount int, filenameGenerator filenam
 	}
 
 	if buffer.lineCount > 0 {
-		err := file_io.CreateFileAndWrite(filenameGenerator.GetCurrentWithSuffix(), buffer.bytes)
+		err := file_io.CreateFileAndWrite(filenameGenerator.GetCurrentWithPrefix(), buffer.bytes)
 		if err != nil {
 			return fmt.Errorf("ExecuteByLine: error when create and write file: %s", err)
 		}

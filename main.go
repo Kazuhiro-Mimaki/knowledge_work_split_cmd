@@ -49,7 +49,10 @@ func main() {
 		mode = filename_generator.ALPHABET
 	}
 
-	filenameGenerator := filename_generator.New(a, suffix, mode)
+	filenameGenerator, err := filename_generator.New(a, suffix, mode)
+	if err != nil {
+		log.Fatal(err)
+	}
 
 	switch validation.Mode(l, n, b) {
 	case "l":

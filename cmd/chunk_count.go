@@ -33,7 +33,7 @@ func ExecuteByChunk(readFilePath string, chunkCount int, filenameGenerator filen
 			return fmt.Errorf("ExecuteByChunk: error when read chunks by byte count in loop : %s", err)
 		}
 
-		err = file_io.CreateFileAndWrite(filenameGenerator.GetCurrentWithSuffix(), chunks)
+		err = file_io.CreateFileAndWrite(filenameGenerator.GetCurrentWithPrefix(), chunks)
 		if err != nil {
 			return fmt.Errorf("ExecuteByChunk: error when create and write file in loop : %s", err)
 		}
@@ -46,7 +46,7 @@ func ExecuteByChunk(readFilePath string, chunkCount int, filenameGenerator filen
 		return fmt.Errorf("ExecuteByChunk: error when read chunks by byte count : %s", err)
 	}
 
-	err = file_io.CreateFileAndWrite(filenameGenerator.GetCurrentWithSuffix(), chunks)
+	err = file_io.CreateFileAndWrite(filenameGenerator.GetCurrentWithPrefix(), chunks)
 	if err != nil {
 		return fmt.Errorf("ExecuteByChunk: error when create and write file : %s", err)
 	}

@@ -27,7 +27,7 @@ func ExecuteByteCount(readFilePath string, byteCount int, filenameGenerator file
 			return fmt.Errorf("ExecuteByteCount: error when read chunks by byte count in loop: %s", err)
 		}
 
-		err = file_io.CreateFileAndWrite(filenameGenerator.GetCurrentWithSuffix(), chunks)
+		err = file_io.CreateFileAndWrite(filenameGenerator.GetCurrentWithPrefix(), chunks)
 		if err != nil {
 			return fmt.Errorf("ExecuteByteCount: error when create and write file by byte count: %s", err)
 		}
