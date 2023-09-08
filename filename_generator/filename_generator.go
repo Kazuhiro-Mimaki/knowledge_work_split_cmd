@@ -5,8 +5,8 @@ import "errors"
 type Mode int
 
 const (
-	ALPHABET Mode = iota + 1
-	NUMERIC
+	Alphabet Mode = iota + 1
+	Numeric
 )
 
 type FilenameGenerator struct {
@@ -39,7 +39,7 @@ func (f FilenameGenerator) GetCurrentWithPrefix() string {
 	return f.prefix + string(f.currentRunes)
 }
 
-// アルファベットまたは数字 を逆順で走査し、インクリメントする
+// ファイル名をインクリメントする (aa -> ab -> ac -> ... -> az -> ba -> bb -> ...)
 func (f *FilenameGenerator) Increment() ([]rune, error) {
 	initialRune, lastRune, err := runeByMode(f.mode)
 	if err != nil {
@@ -63,11 +63,12 @@ func (f *FilenameGenerator) Increment() ([]rune, error) {
 	return f.currentRunes, nil
 }
 
+// 指定されたモードに従い、アルファベットか数字を判断し、閾値を返す
 func runeByMode(mode Mode) (rune, rune, error) {
 	switch mode {
-	case ALPHABET:
+	case Alphabet:
 		return 'a', 'z', nil
-	case NUMERIC:
+	case Numeric:
 		return '0', '9', nil
 	default:
 		return 0, 0, errors.New("invalid mode")

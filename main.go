@@ -44,9 +44,9 @@ func main() {
 	}
 
 	if d == true {
-		mode = filename_generator.NUMERIC
+		mode = filename_generator.Numeric
 	} else {
-		mode = filename_generator.ALPHABET
+		mode = filename_generator.Alphabet
 	}
 
 	filenameGenerator, err := filename_generator.New(a, suffix, mode)
