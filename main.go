@@ -12,18 +12,18 @@ import (
 
 func main() {
 	var (
-		l int
-		n int
-		b int
-		a int
-		d bool
+		l            int
+		n            int
+		b            int
+		suffixLength int
+		isNumeric    bool
 	)
 
 	flag.IntVar(&l, "l", 0, "line_count")
 	flag.IntVar(&n, "n", 0, "chunk_count")
 	flag.IntVar(&b, "b", 0, "byte_count")
-	flag.IntVar(&a, "a", 0, "suffix_length")
-	flag.BoolVar(&d, "d", false, "is_numeric_suffix")
+	flag.IntVar(&suffixLength, "a", 0, "suffix_length")
+	flag.BoolVar(&isNumeric, "d", false, "is_numeric")
 
 	flag.Parse()
 
@@ -34,7 +34,6 @@ func main() {
 	var (
 		readFilePath string
 		prefix       string
-		mode         filename_generator.Mode
 	)
 
 	if len(flag.Args()) == 1 {
@@ -43,16 +42,7 @@ func main() {
 		readFilePath, prefix = flag.Arg(0), flag.Arg(1)
 	}
 
-	if d == true {
-		mode = filename_generator.Numeric
-	} else {
-		mode = filename_generator.Alphabet
-	}
-
-	filenameGenerator, err := filename_generator.New(a, prefix, mode)
-	if err != nil {
-		log.Fatal(err)
-	}
+	filenameGenerator := filename_generator.New(suffixLength, prefix, isNumeric)
 
 	switch validation.Mode(l, n, b) {
 	case "l":

@@ -7,7 +7,7 @@ import (
 
 func TestAlphabetFilenameGenerator(t *testing.T) {
 	t.Run("正常系 (引数指定がない場合)", func(t *testing.T) {
-		filenameGenerator, _ := New(0, "", Alphabet)
+		filenameGenerator := New(0, "", false)
 		want := "aa"
 		if !reflect.DeepEqual(filenameGenerator.GetCurrentWithPrefix(), want) {
 			t.Errorf("filenameGenerator.GetCurrentWithPrefix() == %v, want %v", filenameGenerator.GetCurrentWithPrefix(), want)
@@ -15,7 +15,7 @@ func TestAlphabetFilenameGenerator(t *testing.T) {
 	})
 
 	t.Run("正常系 (引数指定がある場合)", func(t *testing.T) {
-		filenameGenerator, _ := New(3, "", Alphabet)
+		filenameGenerator := New(3, "", false)
 		want := "aaa"
 		if !reflect.DeepEqual(filenameGenerator.GetCurrentWithPrefix(), want) {
 			t.Errorf("filenameGenerator.GetCurrentWithPrefix() == %v, want %v", filenameGenerator.GetCurrentWithPrefix(), want)
@@ -23,7 +23,7 @@ func TestAlphabetFilenameGenerator(t *testing.T) {
 	})
 
 	t.Run("正常系 (prefix指定がある場合)", func(t *testing.T) {
-		filenameGenerator, _ := New(3, "prefix_", Alphabet)
+		filenameGenerator := New(3, "prefix_", false)
 		want := "prefix_aaa"
 		if !reflect.DeepEqual(filenameGenerator.GetCurrentWithPrefix(), want) {
 			t.Errorf("filenameGenerator.GetCurrentWithPrefix() == %v, want %v", filenameGenerator.GetCurrentWithPrefix(), want)
@@ -71,7 +71,7 @@ func TestAlphabetFilenameIncrement(t *testing.T) {
 
 func TestNumericFilenameGenerator(t *testing.T) {
 	t.Run("正常系 (引数指定がない場合)", func(t *testing.T) {
-		filenameGenerator, _ := New(0, "", Numeric)
+		filenameGenerator := New(0, "", true)
 		want := "00"
 		if !reflect.DeepEqual(filenameGenerator.GetCurrentWithPrefix(), want) {
 			t.Errorf("filenameGenerator.GetCurrentWithPrefix() == %v, want %v", filenameGenerator.GetCurrentWithPrefix(), want)
@@ -79,7 +79,7 @@ func TestNumericFilenameGenerator(t *testing.T) {
 	})
 
 	t.Run("正常系 (引数指定がある場合)", func(t *testing.T) {
-		filenameGenerator, _ := New(3, "", Numeric)
+		filenameGenerator := New(3, "", true)
 		want := "000"
 		if !reflect.DeepEqual(filenameGenerator.GetCurrentWithPrefix(), want) {
 			t.Errorf("filenameGenerator.GetCurrentWithPrefix() == %v, want %v", filenameGenerator.GetCurrentWithPrefix(), want)
@@ -87,7 +87,7 @@ func TestNumericFilenameGenerator(t *testing.T) {
 	})
 
 	t.Run("正常系 (prefix指定がある場合)", func(t *testing.T) {
-		filenameGenerator, _ := New(3, "prefix_", Numeric)
+		filenameGenerator := New(3, "prefix_", true)
 		want := "prefix_000"
 		if !reflect.DeepEqual(filenameGenerator.GetCurrentWithPrefix(), want) {
 			t.Errorf("filenameGenerator.GetCurrentWithPrefix() == %v, want %v", filenameGenerator.GetCurrentWithPrefix(), want)
