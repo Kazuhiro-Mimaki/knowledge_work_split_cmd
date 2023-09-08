@@ -33,14 +33,14 @@ func main() {
 
 	var (
 		readFilePath string
-		suffix       string
+		prefix       string
 		mode         filename_generator.Mode
 	)
 
 	if len(flag.Args()) == 1 {
-		readFilePath, suffix = flag.Arg(0), ""
+		readFilePath, prefix = flag.Arg(0), ""
 	} else if len(flag.Args()) == 2 {
-		readFilePath, suffix = flag.Arg(0), flag.Arg(1)
+		readFilePath, prefix = flag.Arg(0), flag.Arg(1)
 	}
 
 	if d == true {
@@ -49,7 +49,7 @@ func main() {
 		mode = filename_generator.Alphabet
 	}
 
-	filenameGenerator, err := filename_generator.New(a, suffix, mode)
+	filenameGenerator, err := filename_generator.New(a, prefix, mode)
 	if err != nil {
 		log.Fatal(err)
 	}
