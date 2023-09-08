@@ -15,10 +15,10 @@ type FilenameGenerator struct {
 	mode         Mode
 }
 
-func New(initialRuneCount int, prefix string, mode Mode) (FilenameGenerator, error) {
+func New(initialRuneCount int, prefix string, mode Mode) (*FilenameGenerator, error) {
 	initialRune, _, err := runeByMode(mode)
 	if err != nil {
-		return FilenameGenerator{}, err
+		return nil, err
 	}
 
 	var runes []rune
@@ -32,7 +32,7 @@ func New(initialRuneCount int, prefix string, mode Mode) (FilenameGenerator, err
 		}
 	}
 
-	return FilenameGenerator{currentRunes: runes, prefix: prefix, mode: mode}, nil
+	return &FilenameGenerator{currentRunes: runes, prefix: prefix, mode: mode}, nil
 }
 
 func (f FilenameGenerator) GetCurrentWithPrefix() string {
