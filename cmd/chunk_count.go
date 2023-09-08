@@ -9,7 +9,7 @@ import (
 	"split_cmd/filename_generator"
 )
 
-func ExecuteByChunk(readFilePath string, chunkCount int, filenameGenerator *filename_generator.FilenameGenerator) error {
+func ExecuteByChunk(readFilePath string, chunkCount int, filenameGenerator filename_generator.FilenameGenerator) error {
 	readFile, err := os.Open(readFilePath)
 	if err != nil {
 		return fmt.Errorf("ExecuteByChunk: error when opening file: %s", err)

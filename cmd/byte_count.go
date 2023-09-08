@@ -9,7 +9,7 @@ import (
 	"split_cmd/filename_generator"
 )
 
-func ExecuteByteCount(readFilePath string, byteCount int, filenameGenerator *filename_generator.FilenameGenerator) error {
+func ExecuteByteCount(readFilePath string, byteCount int, filenameGenerator filename_generator.FilenameGenerator) error {
 	readFile, err := os.Open(readFilePath)
 	if err != nil {
 		return fmt.Errorf("ExecuteByteCount: error when opening file: %s", err)

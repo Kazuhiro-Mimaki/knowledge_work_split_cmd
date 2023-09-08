@@ -33,7 +33,7 @@ func TestAlphabetFilenameGenerator(t *testing.T) {
 
 func TestAlphabetFilenameIncrement(t *testing.T) {
 	t.Run("正常系", func(t *testing.T) {
-		filenameGenerator := FilenameGenerator{currentRunes: []rune{'a', 'a', 'a'}, prefix: "", mode: Alphabet}
+		filenameGenerator := AlphabetFilenameGenerator{current: []rune{'a', 'a', 'a'}, prefix: ""}
 		filenameGenerator.Increment()
 		want := "aab"
 		if !reflect.DeepEqual(filenameGenerator.GetCurrentWithPrefix(), want) {
@@ -42,7 +42,7 @@ func TestAlphabetFilenameIncrement(t *testing.T) {
 	})
 
 	t.Run("正常系 (最後尾がzの場合)", func(t *testing.T) {
-		filenameGenerator := FilenameGenerator{currentRunes: []rune{'a', 'a', 'z'}, prefix: "", mode: Alphabet}
+		filenameGenerator := AlphabetFilenameGenerator{current: []rune{'a', 'a', 'z'}, prefix: ""}
 		filenameGenerator.Increment()
 		want := "aba"
 		if !reflect.DeepEqual(filenameGenerator.GetCurrentWithPrefix(), want) {
@@ -51,7 +51,7 @@ func TestAlphabetFilenameIncrement(t *testing.T) {
 	})
 
 	t.Run("正常系 (全てzの場合)", func(t *testing.T) {
-		filenameGenerator := FilenameGenerator{currentRunes: []rune{'z', 'z', 'z'}, prefix: "", mode: Alphabet}
+		filenameGenerator := AlphabetFilenameGenerator{current: []rune{'z', 'z', 'z'}, prefix: ""}
 		filenameGenerator.Increment()
 		want := "aaaa"
 		if !reflect.DeepEqual(filenameGenerator.GetCurrentWithPrefix(), want) {
@@ -60,7 +60,7 @@ func TestAlphabetFilenameIncrement(t *testing.T) {
 	})
 
 	t.Run("正常系 (prefix指定がある場合)", func(t *testing.T) {
-		filenameGenerator := FilenameGenerator{currentRunes: []rune{'z', 'z', 'z'}, prefix: "prefix_", mode: Alphabet}
+		filenameGenerator := AlphabetFilenameGenerator{current: []rune{'z', 'z', 'z'}, prefix: "prefix_"}
 		filenameGenerator.Increment()
 		want := "prefix_aaaa"
 		if !reflect.DeepEqual(filenameGenerator.GetCurrentWithPrefix(), want) {
@@ -97,7 +97,7 @@ func TestNumericFilenameGenerator(t *testing.T) {
 
 func TestNumericFilenameIncrement(t *testing.T) {
 	t.Run("正常系", func(t *testing.T) {
-		filenameGenerator := FilenameGenerator{currentRunes: []rune{'0', '0', '0'}, prefix: "", mode: Numeric}
+		filenameGenerator := NumericFilenameGenerator{current: []rune{'0', '0', '0'}, prefix: ""}
 		filenameGenerator.Increment()
 		want := "001"
 		if !reflect.DeepEqual(filenameGenerator.GetCurrentWithPrefix(), want) {
@@ -106,7 +106,7 @@ func TestNumericFilenameIncrement(t *testing.T) {
 	})
 
 	t.Run("正常系 (最後尾が9の場合)", func(t *testing.T) {
-		filenameGenerator := FilenameGenerator{currentRunes: []rune{'0', '0', '9'}, prefix: "", mode: Numeric}
+		filenameGenerator := NumericFilenameGenerator{current: []rune{'0', '0', '9'}, prefix: ""}
 		filenameGenerator.Increment()
 		want := "010"
 		if !reflect.DeepEqual(filenameGenerator.GetCurrentWithPrefix(), want) {
@@ -115,7 +115,7 @@ func TestNumericFilenameIncrement(t *testing.T) {
 	})
 
 	t.Run("正常系 (全て9の場合)", func(t *testing.T) {
-		filenameGenerator := FilenameGenerator{currentRunes: []rune{'9', '9', '9'}, prefix: "", mode: Numeric}
+		filenameGenerator := NumericFilenameGenerator{current: []rune{'9', '9', '9'}, prefix: ""}
 		filenameGenerator.Increment()
 		want := "0000"
 		if !reflect.DeepEqual(filenameGenerator.GetCurrentWithPrefix(), want) {
@@ -124,7 +124,7 @@ func TestNumericFilenameIncrement(t *testing.T) {
 	})
 
 	t.Run("正常系 (prefix指定がある場合)", func(t *testing.T) {
-		filenameGenerator := FilenameGenerator{currentRunes: []rune{'9', '9', '9'}, prefix: "prefix_", mode: Numeric}
+		filenameGenerator := NumericFilenameGenerator{current: []rune{'9', '9', '9'}, prefix: "prefix_"}
 		filenameGenerator.Increment()
 		want := "prefix_0000"
 		if !reflect.DeepEqual(filenameGenerator.GetCurrentWithPrefix(), want) {

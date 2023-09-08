@@ -9,7 +9,7 @@ import (
 	"split_cmd/filename_generator"
 )
 
-func ExecuteByLine(readFilePath string, lineCount int, filenameGenerator *filename_generator.FilenameGenerator) error {
+func ExecuteByLine(readFilePath string, lineCount int, filenameGenerator filename_generator.FilenameGenerator) error {
 	file, err := os.Open(readFilePath)
 	if err != nil {
 		return fmt.Errorf("ExecuteByLine: error when opening file: %s", err)
