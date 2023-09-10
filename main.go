@@ -5,9 +5,9 @@ import (
 	"log"
 	"os"
 
-	"split_cmd/cmd"
 	"split_cmd/filename_generator"
 	"split_cmd/parser"
+	"split_cmd/split"
 )
 
 func main() {
@@ -33,17 +33,17 @@ func main() {
 	switch cmdArgs.SplitType {
 	case parser.Line:
 		// split file by line
-		if err := cmd.ExecuteByLine(file, cmdArgs.LineCount, filenameGenerator); err != nil {
+		if err := split.ByLine(file, cmdArgs.LineCount, filenameGenerator); err != nil {
 			log.Fatal(err)
 		}
 	case parser.Chunk:
 		// split file by chunk
-		if err := cmd.ExecuteByChunk(file, fileSize, cmdArgs.ChunkCount, filenameGenerator); err != nil {
+		if err := split.ByChunk(file, fileSize, cmdArgs.ChunkCount, filenameGenerator); err != nil {
 			log.Fatal(err)
 		}
 	case parser.Byte:
 		// split file by byte
-		if err := cmd.ExecuteByteCount(file, cmdArgs.ByteCount, filenameGenerator); err != nil {
+		if err := split.ByByteCount(file, cmdArgs.ByteCount, filenameGenerator); err != nil {
 			log.Fatal(err)
 		}
 	default:

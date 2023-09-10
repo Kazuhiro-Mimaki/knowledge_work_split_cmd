@@ -1,4 +1,4 @@
-package cmd
+package split
 
 type ScannerBuffer struct {
 	lineCount int

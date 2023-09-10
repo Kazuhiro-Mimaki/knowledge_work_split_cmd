@@ -7,18 +7,18 @@ import (
 	"testing"
 )
 
-func TestReadChunksByByteCount(t *testing.T) {
+func TestReadByByteCount(t *testing.T) {
 	t.Run("正常系 (バイト列の最初から2つを読み取る)", func(t *testing.T) {
 		mockBuff := bytes.NewBuffer([]byte{'A', 'B', 'C'})
 		reader := bufio.NewReader(mockBuff)
 
-		chunks, cursor, _ := ReadChunksByByteCount(reader, 2)
+		bytes, cursor, _ := ReadByByteCount(reader, 2)
 
-		wantChunks := []byte{'A', 'B'}
+		wantBytes := []byte{'A', 'B'}
 		wantCursor := 2
 
-		if string(chunks) != string(wantChunks) {
-			t.Errorf("chunks == %v, want %s", chunks, wantChunks)
+		if string(bytes) != string(wantBytes) {
+			t.Errorf("bytes == %v, want %s", bytes, wantBytes)
 		}
 		if cursor != wantCursor {
 			t.Errorf("cursor == %d, want %d", cursor, wantCursor)
@@ -29,13 +29,13 @@ func TestReadChunksByByteCount(t *testing.T) {
 		mockBuff := bytes.NewBuffer([]byte{'A', 'B', 'C'})
 		reader := bufio.NewReader(mockBuff)
 
-		chunks, cursor, _ := ReadChunksByByteCount(reader, 5)
+		bytes, cursor, _ := ReadByByteCount(reader, 5)
 
-		wantChunks := []byte{'A', 'B', 'C'}
+		wantBytes := []byte{'A', 'B', 'C'}
 		wantCursor := 3
 
-		if string(chunks) != string(wantChunks) {
-			t.Errorf("chunks == %v, want %s", chunks, wantChunks)
+		if string(bytes) != string(wantBytes) {
+			t.Errorf("bytes == %v, want %s", bytes, wantBytes)
 		}
 		if cursor != wantCursor {
 			t.Errorf("cursor == %d, want %d", cursor, wantCursor)
@@ -46,30 +46,30 @@ func TestReadChunksByByteCount(t *testing.T) {
 		mockBuff := bytes.NewBuffer([]byte{'A', 'B', 'C'})
 		reader := bufio.NewReader(mockBuff)
 
-		bytes := [][]byte{}
+		byteBuf := [][]byte{}
 
 		for {
-			chunks, cursor, _ := ReadChunksByByteCount(reader, 1)
+			bytes, cursor, _ := ReadByByteCount(reader, 1)
 			if cursor < 1 {
 				break
 			}
-			bytes = append(bytes, chunks)
+			byteBuf = append(byteBuf, bytes)
 		}
 
 		want := [][]byte{{'A'}, {'B'}, {'C'}}
 
-		if !reflect.DeepEqual(bytes, want) {
-			t.Errorf("bytes == %v, want %s", bytes, want)
+		if !reflect.DeepEqual(byteBuf, want) {
+			t.Errorf("byteBuf == %v, want %s", byteBuf, want)
 		}
 	})
 }
 
-func TestWriteChunks(t *testing.T) {
+func TestWriteBytes(t *testing.T) {
 	t.Run("正常系 (バイト列を書き込む)", func(t *testing.T) {
 		outputBuff := bytes.NewBuffer([]byte{})
 		writer := bufio.NewWriter(outputBuff)
 
-		_ = writeChunks(writer, []byte{'A', 'B', 'C'})
+		_ = writeBytes(writer, []byte{'A', 'B', 'C'})
 
 		want := []byte{'A', 'B', 'C'}
 
@@ -82,7 +82,7 @@ func TestWriteChunks(t *testing.T) {
 		outputBuff := bytes.NewBuffer([]byte{})
 		writer := bufio.NewWriter(outputBuff)
 
-		_ = writeChunks(writer, []byte{})
+		_ = writeBytes(writer, []byte{})
 
 		want := []byte{}
 

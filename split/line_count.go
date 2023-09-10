@@ -1,4 +1,4 @@
-package cmd
+package split
 
 import (
 	"bufio"
@@ -9,7 +9,7 @@ import (
 	"split_cmd/filename_generator"
 )
 
-func ExecuteByLine(r io.Reader, lineCount int, filenameGenerator filename_generator.FilenameGenerator) error {
+func ByLine(r io.Reader, lineCount int, filenameGenerator filename_generator.FilenameGenerator) error {
 	scanner := bufio.NewScanner(r)
 	buffer := NewScannerBuffer()
 
@@ -23,7 +23,7 @@ func ExecuteByLine(r io.Reader, lineCount int, filenameGenerator filename_genera
 		if buffer.lineCount == lineCount {
 			err := file_io.CreateFileAndWrite(filenameGenerator.GetCurrentWithPrefix(), buffer.bytes)
 			if err != nil {
-				return fmt.Errorf("ExecuteByLine: error when create and write file in loop: %s", err)
+				return fmt.Errorf("SplitByLine: error when create and write file in loop: %s", err)
 			}
 			buffer.Reset()
 			filenameGenerator.Increment()
@@ -33,12 +33,12 @@ func ExecuteByLine(r io.Reader, lineCount int, filenameGenerator filename_genera
 	if buffer.lineCount > 0 {
 		err := file_io.CreateFileAndWrite(filenameGenerator.GetCurrentWithPrefix(), buffer.bytes)
 		if err != nil {
-			return fmt.Errorf("ExecuteByLine: error when create and write file: %s", err)
+			return fmt.Errorf("SplitByLine: error when create and write file: %s", err)
 		}
 	}
 
 	if err := scanner.Err(); err != nil {
-		return fmt.Errorf("ExecuteByLine: error when scan file: %s", err)
+		return fmt.Errorf("SplitByLine: error when scan file: %s", err)
 	}
 
 	return nil
