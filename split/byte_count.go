@@ -2,7 +2,6 @@ package split
 
 import (
 	"bufio"
-	"fmt"
 	"io"
 
 	"split_cmd/file_io"
@@ -18,12 +17,12 @@ func ByByteCount(r io.Reader, byteCount int, filenameGenerator filename_generato
 			if err.Error() == "EOF" {
 				break
 			}
-			return fmt.Errorf("SplitByteCount: error when read bytes by byte count in loop: %s", err)
+			return err
 		}
 
 		err = file_io.CreateFileAndWrite(filenameGenerator.GetCurrentWithPrefix(), bytes)
 		if err != nil {
-			return fmt.Errorf("SplitByteCount: error when create and write file by byte count: %s", err)
+			return err
 		}
 
 		filenameGenerator.Increment()

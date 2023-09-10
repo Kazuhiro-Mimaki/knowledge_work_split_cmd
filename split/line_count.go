@@ -2,7 +2,6 @@ package split
 
 import (
 	"bufio"
-	"fmt"
 	"io"
 
 	"split_cmd/file_io"
@@ -23,7 +22,7 @@ func ByLine(r io.Reader, lineCount int, filenameGenerator filename_generator.Fil
 		if buffer.lineCount == lineCount {
 			err := file_io.CreateFileAndWrite(filenameGenerator.GetCurrentWithPrefix(), buffer.bytes)
 			if err != nil {
-				return fmt.Errorf("SplitByLine: error when create and write file in loop: %s", err)
+				return err
 			}
 			buffer.Reset()
 			filenameGenerator.Increment()
@@ -33,12 +32,12 @@ func ByLine(r io.Reader, lineCount int, filenameGenerator filename_generator.Fil
 	if buffer.lineCount > 0 {
 		err := file_io.CreateFileAndWrite(filenameGenerator.GetCurrentWithPrefix(), buffer.bytes)
 		if err != nil {
-			return fmt.Errorf("SplitByLine: error when create and write file: %s", err)
+			return err
 		}
 	}
 
 	if err := scanner.Err(); err != nil {
-		return fmt.Errorf("SplitByLine: error when scan file: %s", err)
+		return err
 	}
 
 	return nil

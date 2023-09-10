@@ -2,7 +2,7 @@ package split
 
 import (
 	"bufio"
-	"fmt"
+	"errors"
 	"io"
 
 	"split_cmd/file_io"
@@ -11,7 +11,7 @@ import (
 
 func ByChunk(r io.Reader, fileSize, chunkCount int, filenameGenerator filename_generator.FilenameGenerator) error {
 	if fileSize < chunkCount {
-		return fmt.Errorf("SplitByChunk: can't split into more than %d files", fileSize)
+		return errors.New("SplitByChunk: can't split file by chunk because file size is smaller than chunk count")
 	}
 	byteCount, rest := fileSize/chunkCount, fileSize%chunkCount
 
@@ -20,12 +20,12 @@ func ByChunk(r io.Reader, fileSize, chunkCount int, filenameGenerator filename_g
 	for i := 1; i < chunkCount; i++ {
 		bytes, _, err := file_io.ReadByByteCount(reader, byteCount)
 		if err != nil {
-			return fmt.Errorf("SplitByChunk: error when read bytes by byte count in loop : %s", err)
+			return err
 		}
 
 		err = file_io.CreateFileAndWrite(filenameGenerator.GetCurrentWithPrefix(), bytes)
 		if err != nil {
-			return fmt.Errorf("SplitByChunk: error when create and write file in loop : %s", err)
+			return err
 		}
 
 		filenameGenerator.Increment()
@@ -33,12 +33,12 @@ func ByChunk(r io.Reader, fileSize, chunkCount int, filenameGenerator filename_g
 
 	bytes, _, err := file_io.ReadByByteCount(reader, byteCount+rest)
 	if err != nil {
-		return fmt.Errorf("SplitByChunk: error when read bytes by byte count : %s", err)
+		return err
 	}
 
 	err = file_io.CreateFileAndWrite(filenameGenerator.GetCurrentWithPrefix(), bytes)
 	if err != nil {
-		return fmt.Errorf("SplitByChunk: error when create and write file : %s", err)
+		return err
 	}
 
 	return nil
