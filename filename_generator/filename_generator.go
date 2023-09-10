@@ -1,14 +1,16 @@
 package filename_generator
 
+import "split_cmd/parser"
+
 type FilenameGenerator interface {
 	GetCurrentWithPrefix() string
 	Increment() []rune
 }
 
-func New(suffixLength int, prefix string, isNumeric bool) FilenameGenerator {
-	if isNumeric {
-		return NewNumericFilenameGenerator(suffixLength, prefix)
+func New(cmdArgs *parser.CmdArgs) FilenameGenerator {
+	if cmdArgs.IsNumeric {
+		return NewNumericFilenameGenerator(cmdArgs.SuffixLength, cmdArgs.Prefix)
 	} else {
-		return NewAlphabetFilenameGenerator(suffixLength, prefix)
+		return NewAlphabetFilenameGenerator(cmdArgs.SuffixLength, cmdArgs.Prefix)
 	}
 }
