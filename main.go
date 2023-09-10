@@ -22,7 +22,8 @@ func main() {
 	flag.IntVar(&l, "l", 0, "line_count")
 	flag.IntVar(&n, "n", 0, "chunk_count")
 	flag.IntVar(&b, "b", 0, "byte_count")
-	flag.IntVar(&suffixLength, "a", 0, "suffix_length")
+	// デフォルトを2にする
+	flag.IntVar(&suffixLength, "a", 2, "suffix_length")
 	flag.BoolVar(&isNumeric, "d", false, "is_numeric")
 
 	flag.Parse()

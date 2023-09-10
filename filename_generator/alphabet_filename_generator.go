@@ -7,14 +7,9 @@ type AlphabetFilenameGenerator struct {
 
 func NewAlphabetFilenameGenerator(suffixLength int, prefix string) FilenameGenerator {
 	var current []rune
-	if suffixLength == 0 {
-		// 指定がない場合はデフォルト (aa) から開始
-		current = []rune{'a', 'a'}
-	} else {
-		// 指定がある場合は suffixLength * (a) から開始
-		for i := 0; i < suffixLength; i++ {
-			current = append(current, 'a')
-		}
+	// 指定がある場合は suffixLength * (a) から開始
+	for i := 0; i < suffixLength; i++ {
+		current = append(current, 'a')
 	}
 
 	return &AlphabetFilenameGenerator{current, prefix}
