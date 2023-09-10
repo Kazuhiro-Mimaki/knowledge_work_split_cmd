@@ -3,20 +3,14 @@ package cmd
 import (
 	"bufio"
 	"fmt"
-	"os"
+	"io"
 
 	"split_cmd/file_io"
 	"split_cmd/filename_generator"
 )
 
-func ExecuteByLine(readFilePath string, lineCount int, filenameGenerator filename_generator.FilenameGenerator) error {
-	file, err := os.Open(readFilePath)
-	if err != nil {
-		return fmt.Errorf("ExecuteByLine: error when opening file: %s", err)
-	}
-	defer file.Close()
-
-	scanner := bufio.NewScanner(file)
+func ExecuteByLine(r io.Reader, lineCount int, filenameGenerator filename_generator.FilenameGenerator) error {
+	scanner := bufio.NewScanner(r)
 	buffer := NewScannerBuffer()
 
 	for scanner.Scan() {

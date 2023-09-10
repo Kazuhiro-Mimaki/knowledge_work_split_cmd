@@ -3,29 +3,19 @@ package cmd
 import (
 	"bufio"
 	"fmt"
-	"os"
+	"io"
 
 	"split_cmd/file_io"
 	"split_cmd/filename_generator"
 )
 
-func ExecuteByChunk(readFilePath string, chunkCount int, filenameGenerator filename_generator.FilenameGenerator) error {
-	readFile, err := os.Open(readFilePath)
-	if err != nil {
-		return fmt.Errorf("ExecuteByChunk: error when opening file: %s", err)
-	}
-	defer readFile.Close()
-
-	fileSize, err := file_io.GetFileSize(readFile)
-	if err != nil {
-		return fmt.Errorf("ExecuteByChunk: error when get file size %d files", err)
-	}
+func ExecuteByChunk(r io.Reader, fileSize, chunkCount int, filenameGenerator filename_generator.FilenameGenerator) error {
 	if fileSize < chunkCount {
 		return fmt.Errorf("ExecuteByChunk: can't split into more than %d files", fileSize)
 	}
 	byteCount, rest := fileSize/chunkCount, fileSize%chunkCount
 
-	reader := bufio.NewReader(readFile)
+	reader := bufio.NewReader(r)
 
 	for i := 1; i < chunkCount; i++ {
 		chunks, _, err := file_io.ReadChunksByByteCount(reader, byteCount)

@@ -2,7 +2,6 @@ package file_io
 
 import (
 	"bufio"
-	"errors"
 	"os"
 )
 
@@ -16,21 +15,6 @@ func writeChunks(writer *bufio.Writer, chunks []byte) error {
 	_, err := writer.Write(chunks)
 	err = writer.Flush()
 	return err
-}
-
-func GetFileSize(file *os.File) (int, error) {
-	var fileSize int
-	statFile, err := file.Stat()
-	if err != nil {
-		return fileSize, err
-	}
-	size64 := statFile.Size()
-	if int64(int(size64)) == size64 {
-		fileSize = int(size64)
-	} else {
-		return fileSize, errors.New("File size is too big")
-	}
-	return fileSize, nil
 }
 
 func CreateFileAndWrite(filename string, bytes []byte) error {

@@ -3,20 +3,14 @@ package cmd
 import (
 	"bufio"
 	"fmt"
-	"os"
+	"io"
 
 	"split_cmd/file_io"
 	"split_cmd/filename_generator"
 )
 
-func ExecuteByteCount(readFilePath string, byteCount int, filenameGenerator filename_generator.FilenameGenerator) error {
-	readFile, err := os.Open(readFilePath)
-	if err != nil {
-		return fmt.Errorf("ExecuteByteCount: error when opening file: %s", err)
-	}
-	defer readFile.Close()
-
-	reader := bufio.NewReader(readFile)
+func ExecuteByteCount(r io.Reader, byteCount int, filenameGenerator filename_generator.FilenameGenerator) error {
+	reader := bufio.NewReader(r)
 
 	for {
 		chunks, cursor, err := file_io.ReadChunksByByteCount(reader, byteCount)
