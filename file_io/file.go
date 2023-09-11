@@ -6,31 +6,34 @@ import (
 	"os"
 )
 
-func ReadByByteCount(reader io.Reader, byteCount int) ([]byte, int, error) {
+func ReadByByteCount(r io.Reader, byteCount int) ([]byte, int, error) {
 	bytes := make([]byte, byteCount)
-	cursor, err := reader.Read(bytes)
+	cursor, err := r.Read(bytes)
 	if err != nil {
 		return nil, 0, err
 	}
 	return bytes[:cursor], cursor, nil
 }
 
-func writeBytes(writer *bufio.Writer, bytes []byte) error {
-	_, err := writer.Write(bytes)
-	err = writer.Flush()
+func writeBytes(bw *bufio.Writer, bytes []byte) error {
+	_, err := bw.Write(bytes)
+	err = bw.Flush()
 	return err
 }
 
-func CreateFileAndWrite(filename string, bytes []byte) error {
-	writeFile, err := os.Create(filename)
+func CreateAndWrite(path string, bytes []byte) error {
+	w, err := os.Create(path)
 	if err != nil {
 		return err
 	}
-	writer := bufio.NewWriter(writeFile)
-	err = writeBytes(writer, bytes)
+	defer w.Close()
+
+	bw := bufio.NewWriter(w)
+
+	err = writeBytes(bw, bytes)
 	if err != nil {
 		return err
 	}
-	writeFile.Close()
+
 	return nil
 }

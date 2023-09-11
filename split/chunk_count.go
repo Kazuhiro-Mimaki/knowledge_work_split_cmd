@@ -23,7 +23,7 @@ func ByChunk(r io.Reader, fileSize, chunkCount int, filenameGenerator filename_g
 			return err
 		}
 
-		err = file_io.CreateFileAndWrite(filenameGenerator.GetCurrentWithPrefix(), bytes)
+		err = file_io.CreateAndWrite(filenameGenerator.GetCurrentWithPrefix(), bytes)
 		if err != nil {
 			return err
 		}
@@ -31,14 +31,17 @@ func ByChunk(r io.Reader, fileSize, chunkCount int, filenameGenerator filename_g
 		filenameGenerator.Increment()
 	}
 
-	bytes, _, err := file_io.ReadByByteCount(reader, byteCount+rest)
-	if err != nil {
-		return err
-	}
+	// ファイルの最後の行が改行で終わっていない場合は、バッファに残っている行をファイルに書き込む
+	if rest > 0 {
+		bytes, _, err := file_io.ReadByByteCount(reader, byteCount+rest)
+		if err != nil {
+			return err
+		}
 
-	err = file_io.CreateFileAndWrite(filenameGenerator.GetCurrentWithPrefix(), bytes)
-	if err != nil {
-		return err
+		err = file_io.CreateAndWrite(filenameGenerator.GetCurrentWithPrefix(), bytes)
+		if err != nil {
+			return err
+		}
 	}
 
 	return nil

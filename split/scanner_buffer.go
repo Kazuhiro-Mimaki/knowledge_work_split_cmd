@@ -14,10 +14,15 @@ func (b *ScannerBuffer) Reset() {
 	b.bytes = []byte{}
 }
 
-func (b *ScannerBuffer) AppendBytes(bytes []byte) {
+func (b *ScannerBuffer) Increment(bytes []byte) {
+	b.appendBytes(bytes)
+	b.incrementLineCount()
+}
+
+func (b *ScannerBuffer) appendBytes(bytes []byte) {
 	b.bytes = append(b.bytes, bytes...)
 }
 
-func (b *ScannerBuffer) IncrementLineCount() {
+func (b *ScannerBuffer) incrementLineCount() {
 	b.lineCount += 1
 }

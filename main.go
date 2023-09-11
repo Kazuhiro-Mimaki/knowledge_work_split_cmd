@@ -11,6 +11,8 @@ import (
 )
 
 func main() {
+	var err error
+
 	cmdArgs, err := parser.ParseCmdArgs()
 	if err != nil {
 		log.Fatal(err)
@@ -32,22 +34,16 @@ func main() {
 
 	switch cmdArgs.SplitType {
 	case parser.Line:
-		// split file by line
-		if err := split.ByLine(file, cmdArgs.LineCount, filenameGenerator); err != nil {
-			log.Fatal(err)
-		}
+		err = split.ByLine(file, cmdArgs.LineCount, filenameGenerator)
 	case parser.Chunk:
-		// split file by chunk
-		if err := split.ByChunk(file, fileSize, cmdArgs.ChunkCount, filenameGenerator); err != nil {
-			log.Fatal(err)
-		}
+		err = split.ByChunk(file, fileSize, cmdArgs.ChunkCount, filenameGenerator)
 	case parser.Byte:
-		// split file by byte
-		if err := split.ByByteCount(file, cmdArgs.ByteCount, filenameGenerator); err != nil {
-			log.Fatal(err)
-		}
+		err = split.ByByteCount(file, cmdArgs.ByteCount, filenameGenerator)
 	default:
-		err := errors.New("only one option can be used: 'l' or 'n' or 'b' or 'a'")
+		err = errors.New("only one option can be used: 'l' or 'n' or 'b' or 'a'")
+	}
+
+	if err != nil {
 		log.Fatal(err)
 	}
 

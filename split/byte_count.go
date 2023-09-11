@@ -9,10 +9,10 @@ import (
 )
 
 func ByByteCount(r io.Reader, byteCount int, filenameGenerator filename_generator.FilenameGenerator) error {
-	reader := bufio.NewReader(r)
+	br := bufio.NewReader(r)
 
 	for {
-		bytes, cursor, err := file_io.ReadByByteCount(reader, byteCount)
+		bytes, cursor, err := file_io.ReadByByteCount(br, byteCount)
 		if err != nil {
 			if err.Error() == "EOF" {
 				break
@@ -20,7 +20,7 @@ func ByByteCount(r io.Reader, byteCount int, filenameGenerator filename_generato
 			return err
 		}
 
-		err = file_io.CreateFileAndWrite(filenameGenerator.GetCurrentWithPrefix(), bytes)
+		err = file_io.CreateAndWrite(filenameGenerator.GetCurrentWithPrefix(), bytes)
 		if err != nil {
 			return err
 		}
